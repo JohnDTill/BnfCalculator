@@ -1,0 +1,21 @@
+Expression => Below
+Addition => Below (('+' | '-') Below)*
+Multiplication => Below (('*' | '/' | '\' | '%') Below)*
+LeftUnary => '-'* Below
+RightUnary => Below '!'*
+Exponent => Below ('^' LeftUnary)?
+Primitive => Grouping | AbsoluteValue | NumberLiteral | Identifier
+Grouping => '(' Expression ')'
+AbsoluteValue => '|' Expression '|'
+Identifier => VarName CallArgs?
+CallArgs => '(' (Expression (',' Expression)*)? ')'
+
+NumberLiteral => ('0'-'9')+ ('.' ('0'-'9')+)?
+VarName => ('a'-'z' | 'A'-'Z') ('a'-'z' | 'A'-'Z' | '0'-'9')*
+
+
+
+The Identifier rule and sub-rules are rather loosely implemented
+    The implementation is also starting to get long and would benefit from a map
+The object-oriented AST design doesn't fit here, but might be useful as the AST scales.
+The known integer to known integer map of chars to tokentypes seems like overkill, but may be simplest for now.
