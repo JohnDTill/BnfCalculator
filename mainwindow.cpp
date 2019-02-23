@@ -20,7 +20,7 @@ void MainWindow::on_pushButton_clicked(){
     try{
         std::vector<Token> token_stream = Scanner::getTokenStream(source);
         AstNode* root = Parser::parse(token_stream, source);
-        ui->lineEdit->setText(QString::number(root->evaluate()).replace("e","*10^"));
+        ui->lineEdit->setText(QString::number(root->evaluate()).replace("e","*10^").replace("+",""));
         delete root;
     }catch(...){
         ui->lineEdit->setText("err");
