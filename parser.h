@@ -164,7 +164,9 @@ private:
 public:
     static AstNode* parse(std::vector<Token> token_stream, std::string source){
         Parser p(token_stream, source);
-        return p.expression();
+        AstNode* expr = p.expression();
+        if(p.curr!=token_stream.size()) error("Parser Error");
+        return expr;
     }
 };
 
