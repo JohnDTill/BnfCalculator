@@ -2,7 +2,7 @@
 
 Qt app to parse and evaluate mathematical expressions:
 
-![alt text](https://github.com/JohnDTill/BnfCalculator/raw/master/resources/Screenshot.jpg "BnfCalculator App")
+![alt text](resources/Screenshot.jpg?raw=true "BnfCalculator App")
 
 This project is a small exercise is parsing. The calculator accepts expressions of real numbers. Standard operators include addition '+', binary and left-unary subtraction '-', multiplication '\*', division '/', exponentiation '^', and grouping '(' -EXPR- ')'. Also supported are right-unary factorial '!', backwards division '\\', modulus '%', and absolute value '|' -EXPR- '|'. Coincidently the scalar norm also works: '||' -EXPR- '||'.
 
