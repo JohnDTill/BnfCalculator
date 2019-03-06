@@ -1,0 +1,2 @@
+#include "lognode.h"
+

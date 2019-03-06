@@ -1,7 +1,7 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include "astnode.h"
+#include "ast.h"
 #include "errorhandling.h"
 #include "token.h"
 
@@ -48,9 +48,9 @@ private:
 
     AstNode* identifier(){
         if(match(e_CONSTANT)){
-            return new NumberLiteralNode("2.71828182845904523536");
+            return new eLiteralNode;
         }else if(match(PI)){
-            return new NumberLiteralNode("3.14159265358979323846");
+            return new PiLiteralNode;
         }else if(match(COS)){
             consume(LEFT_PAREN);
             AstNode* expr = expression();
