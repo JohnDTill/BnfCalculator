@@ -9,24 +9,10 @@ private:
     unsigned long long line;
 
 public:
-    FactorialNode(AstNode* child, unsigned long long line){
-        this->child = child;
-        this->line = line;
-    }
-
-    virtual ~FactorialNode() override{}
-
-    virtual void deleteChildren() override{
-        child->deleteChildren();
-        delete child;
-    }
-
-    virtual std::string toString() override{
-        return child->toString() + '!';
-    }
-
+    FactorialNode(AstNode* child, unsigned long long line);
+    virtual void deleteChildren() override;
+    virtual std::string toString() override;
     virtual double evaluate() override;
-
     virtual AstNode* simplify() override;
 };
 

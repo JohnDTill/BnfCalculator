@@ -8,25 +8,10 @@ private:
     AstNode* child;
 
 public:
-    SineNode(AstNode* child){
-        this->child = child;
-    }
-
-    virtual ~SineNode() override{}
-
-    virtual void deleteChildren() override{
-        child->deleteChildren();
-        delete child;
-    }
-
-    virtual std::string toString() override{
-        return "sin(" + child->toString() + ')';
-    }
-
-    virtual double evaluate() override{
-        return sin(child->evaluate());
-    }
-
+    SineNode(AstNode* child);
+    virtual void deleteChildren() override;
+    virtual std::string toString() override;
+    virtual double evaluate() override;
     virtual AstNode* simplify() override;
 };
 

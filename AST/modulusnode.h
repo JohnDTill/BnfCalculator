@@ -9,28 +9,10 @@ private:
     AstNode* rhs;
 
 public:
-    ModulusNode(AstNode* lhs, AstNode* rhs){
-        this->lhs = lhs;
-        this->rhs = rhs;
-    }
-
-    virtual ~ModulusNode() override{}
-
-    virtual void deleteChildren() override{
-        lhs->deleteChildren();
-        delete lhs;
-        rhs->deleteChildren();
-        delete rhs;
-    }
-
-    virtual std::string toString() override{
-        return lhs->toString() + '%' + rhs->toString();
-    }
-
-    virtual double evaluate() override{
-        return fmod(lhs->evaluate(), rhs->evaluate());
-    }
-
+    ModulusNode(AstNode* lhs, AstNode* rhs);
+    virtual void deleteChildren() override;
+    virtual std::string toString() override;
+    virtual double evaluate() override;
     virtual AstNode* simplify() override;
 };
 

@@ -3,6 +3,23 @@
 #include "negatenode.h"
 #include "rationalliteralnode.h"
 
+AbsoluteNode::AbsoluteNode(AstNode* child){
+    this->child = child;
+}
+
+void AbsoluteNode::deleteChildren(){
+    child->deleteChildren();
+    delete child;
+}
+
+std::string AbsoluteNode::toString(){
+    return '|' + child->toString() + '|';
+}
+
+double AbsoluteNode::evaluate(){
+    return abs(child->evaluate());
+}
+
 AstNode* AbsoluteNode::simplify(){
     child = getSimplifiedChild(child);
 

@@ -5,6 +5,23 @@
 #include "negatenode.h"
 #include "rationalliteralnode.h"
 
+GroupingNode::GroupingNode(AstNode* child){
+    this->child = child;
+}
+
+void GroupingNode::deleteChildren(){
+    child->deleteChildren();
+    delete child;
+}
+
+std::string GroupingNode::toString(){
+    return '(' + child->toString() + ')';
+}
+
+double GroupingNode::evaluate(){
+    return child->evaluate();
+}
+
 AstNode* GroupingNode::simplify(){
     child = getSimplifiedChild(child);
 

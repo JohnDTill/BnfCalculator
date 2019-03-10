@@ -2,6 +2,26 @@
 
 #include "rationalliteralnode.h"
 
+ModulusNode::ModulusNode(AstNode* lhs, AstNode* rhs){
+    this->lhs = lhs;
+    this->rhs = rhs;
+}
+
+void ModulusNode::deleteChildren(){
+    lhs->deleteChildren();
+    delete lhs;
+    rhs->deleteChildren();
+    delete rhs;
+}
+
+std::string ModulusNode::toString(){
+    return lhs->toString() + '%' + rhs->toString();
+}
+
+double ModulusNode::evaluate(){
+    return fmod(lhs->evaluate(), rhs->evaluate());
+}
+
 AstNode* ModulusNode::simplify(){
     lhs = getSimplifiedChild(lhs);
     rhs = getSimplifiedChild(rhs);

@@ -8,24 +8,10 @@ private:
     AstNode* child;
 
 public:
-    LogNode(AstNode* child){
-        this->child = child;
-    }
-
-    virtual ~LogNode() override{}
-
-    virtual void deleteChildren() override{
-        child->deleteChildren();
-        delete child;
-    }
-
-    virtual std::string toString() override{
-        return "log(" + child->toString() + ')';
-    }
-
-    virtual double evaluate() override{
-        return log10(child->evaluate());
-    }
+    LogNode(AstNode* child);
+    virtual void deleteChildren() override;
+    virtual std::string toString() override;
+    virtual double evaluate() override;
 };
 
 #endif // LOGNODE_H

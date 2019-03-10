@@ -8,25 +8,10 @@ public:
     AstNode* child;
 
 public:
-    NegateNode(AstNode* child){
-        this->child = child;
-    }
-
-    virtual ~NegateNode() override{}
-
-    virtual void deleteChildren() override{
-        child->deleteChildren();
-        delete child;
-    }
-
-    virtual std::string toString() override{
-        return '-' + child->toString();
-    }
-
-    virtual double evaluate() override{
-        return -child->evaluate();
-    }
-
+    NegateNode(AstNode* child);
+    virtual void deleteChildren() override;
+    virtual std::string toString() override;
+    virtual double evaluate() override;
     virtual AstNode* simplify() override;
 };
 

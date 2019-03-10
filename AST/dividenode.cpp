@@ -2,6 +2,26 @@
 
 #include "rationalliteralnode.h"
 
+DivideNode::DivideNode(AstNode* lhs, AstNode* rhs){
+    this->lhs = lhs;
+    this->rhs = rhs;
+}
+
+void DivideNode::deleteChildren(){
+    lhs->deleteChildren();
+    delete lhs;
+    rhs->deleteChildren();
+    delete rhs;
+}
+
+std::string DivideNode::toString(){
+    return lhs->toString() + " / " + rhs->toString();
+}
+
+double DivideNode::evaluate(){
+    return lhs->evaluate() / rhs->evaluate();
+}
+
 AstNode* DivideNode::simplify(){
     lhs = getSimplifiedChild(lhs);
     rhs = getSimplifiedChild(rhs);

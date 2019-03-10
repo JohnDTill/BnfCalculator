@@ -8,23 +8,9 @@ private:
     AstNode* child;
 
 public:
-    NaturalLogNode(AstNode* child){
-        this->child = child;
-    }
-
-    virtual ~NaturalLogNode() override{}
-
-    virtual void deleteChildren() override{
-        child->deleteChildren();
-        delete child;
-    }
-
-    virtual std::string toString() override{
-        return "ln(" + child->toString() + ')';
-    }
-
-    virtual double evaluate() override{
-        return log(child->evaluate());
-    }
+    NaturalLogNode(AstNode* child);
+    virtual void deleteChildren() override;
+    virtual std::string toString() override;
+    virtual double evaluate() override;
 };
 #endif // NATURALLOGNODE_H

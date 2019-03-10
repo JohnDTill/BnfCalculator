@@ -2,6 +2,20 @@
 
 #include "rationalliteralnode.h"
 
+FactorialNode::FactorialNode(AstNode* child, unsigned long long line){
+    this->child = child;
+    this->line = line;
+}
+
+void FactorialNode::deleteChildren(){
+    child->deleteChildren();
+    delete child;
+}
+
+std::string FactorialNode::toString(){
+    return child->toString() + '!';
+}
+
 double FactorialNode::evaluate(){
     double val = child->evaluate();
     int rounded = static_cast<int>(val);

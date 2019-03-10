@@ -2,6 +2,23 @@
 
 #include "rationalliteralnode.h"
 
+NegateNode::NegateNode(AstNode* child){
+    this->child = child;
+}
+
+void NegateNode::deleteChildren(){
+    child->deleteChildren();
+    delete child;
+}
+
+std::string NegateNode::toString(){
+    return '-' + child->toString();
+}
+
+double NegateNode::evaluate(){
+    return -child->evaluate();
+}
+
 AstNode* NegateNode::simplify(){
     child = getSimplifiedChild(child);
 

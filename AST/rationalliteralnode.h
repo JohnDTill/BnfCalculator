@@ -8,20 +8,10 @@ public:
     rational val;
 
 public:
-    RationalLiteralNode(rational val){
-        this->val = val;
-    }
-
+    RationalLiteralNode(rational val);
     virtual void deleteChildren() override{}
-
-    virtual std::string toString() override{
-        return val.toString();
-    }
-
-    virtual double evaluate() override{
-        double magnitude = std::atoi(val.numerator.toString().data()) / static_cast<double>(std::atoi(val.denominator.toString().data()));
-        return val.is_negative ? -magnitude : magnitude;
-    }
+    virtual std::string toString() override;
+    virtual double evaluate() override;
 };
 
 #endif // RATIONALLITERALNODE_H

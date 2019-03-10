@@ -2,6 +2,18 @@
 
 #include "rationalliteralnode.h"
 
+NumberLiteralNode::NumberLiteralNode(std::string num_str){
+    val = num_str;
+}
+
+std::string NumberLiteralNode::toString(){
+    return val;
+}
+
+double NumberLiteralNode::evaluate(){
+    return std::atof(val.data());
+}
+
 AstNode* NumberLiteralNode::simplify() {
     bool is_negative = (val.at(0) == '-');
     std::string mag = is_negative ? val.substr(1,val.size()-1) : val;

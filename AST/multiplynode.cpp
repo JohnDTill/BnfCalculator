@@ -2,6 +2,26 @@
 
 #include "rationalliteralnode.h"
 
+MultiplyNode::MultiplyNode(AstNode* lhs, AstNode* rhs){
+    this->lhs = lhs;
+    this->rhs = rhs;
+}
+
+void MultiplyNode::deleteChildren(){
+    lhs->deleteChildren();
+    delete lhs;
+    rhs->deleteChildren();
+    delete rhs;
+}
+
+std::string MultiplyNode::toString(){
+    return lhs->toString() + '*' + rhs->toString();
+}
+
+double MultiplyNode::evaluate(){
+    return lhs->evaluate() * rhs->evaluate();
+}
+
 AstNode* MultiplyNode::simplify(){
     lhs = getSimplifiedChild(lhs);
     rhs = getSimplifiedChild(rhs);

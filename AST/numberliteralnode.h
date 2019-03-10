@@ -8,20 +8,10 @@ private:
     std::string val;
 
 public:
-    NumberLiteralNode(std::string num_str){
-        val = num_str;
-    }
-
+    NumberLiteralNode(std::string num_str);
     virtual void deleteChildren() override{}
-
-    virtual std::string toString() override{
-        return val;
-    }
-
-    virtual double evaluate() override{
-        return std::atof(val.data());
-    }
-
+    virtual std::string toString() override;
+    virtual double evaluate() override;
     virtual AstNode* simplify() override;
 };
 

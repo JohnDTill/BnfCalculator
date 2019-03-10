@@ -2,6 +2,23 @@
 
 #include "rationalliteralnode.h"
 
+CosineNode::CosineNode(AstNode* child){
+    this->child = child;
+}
+
+void CosineNode::deleteChildren(){
+    child->deleteChildren();
+    delete child;
+}
+
+std::string CosineNode::toString(){
+    return "cos(" + child->toString() + ')';
+}
+
+double CosineNode::evaluate(){
+    return cos(child->evaluate());
+}
+
 AstNode* CosineNode::simplify(){
     child = getSimplifiedChild(child);
 

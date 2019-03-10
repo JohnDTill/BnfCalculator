@@ -5,17 +5,9 @@
 
 class eLiteralNode : public AstNode{
 public:
-    virtual ~eLiteralNode() override {}
-
     virtual void deleteChildren() override{}
-
-    virtual std::string toString() override{
-        return "e";
-    }
-
-    virtual double evaluate() override{
-        return 2.71828182845904523536;
-    }
+    virtual std::string toString() override;
+    virtual double evaluate() override;
 };
 
 #endif // ELITERALNODE_H

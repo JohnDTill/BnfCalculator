@@ -2,6 +2,26 @@
 
 #include "rationalliteralnode.h"
 
+ExponentNode::ExponentNode(AstNode* lhs, AstNode* rhs){
+    this->lhs = lhs;
+    this->rhs = rhs;
+}
+
+void ExponentNode::deleteChildren(){
+    lhs->deleteChildren();
+    delete lhs;
+    rhs->deleteChildren();
+    delete rhs;
+}
+
+std::string ExponentNode::toString(){
+    return lhs->toString() + '^' + rhs->toString();
+}
+
+double ExponentNode::evaluate(){
+    return pow(lhs->evaluate(), rhs->evaluate());
+}
+
 AstNode* ExponentNode::simplify(){
     lhs = getSimplifiedChild(lhs);
     rhs = getSimplifiedChild(rhs);

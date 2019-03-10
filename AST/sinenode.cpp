@@ -2,6 +2,23 @@
 
 #include "rationalliteralnode.h"
 
+SineNode::SineNode(AstNode* child){
+    this->child = child;
+}
+
+void SineNode::deleteChildren(){
+    child->deleteChildren();
+    delete child;
+}
+
+std::string SineNode::toString(){
+    return "sin(" + child->toString() + ')';
+}
+
+double SineNode::evaluate(){
+    return sin(child->evaluate());
+}
+
 AstNode* SineNode::simplify(){
     child = getSimplifiedChild(child);
 

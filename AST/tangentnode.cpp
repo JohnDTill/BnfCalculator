@@ -2,6 +2,23 @@
 
 #include "rationalliteralnode.h"
 
+TangentNode::TangentNode(AstNode* child){
+    this->child = child;
+}
+
+void TangentNode::deleteChildren(){
+    child->deleteChildren();
+    delete child;
+}
+
+std::string TangentNode::toString(){
+    return "tan(" + child->toString() + ')';
+}
+
+double TangentNode::evaluate(){
+    return tan(child->evaluate());
+}
+
 AstNode* TangentNode::simplify(){
     child = getSimplifiedChild(child);
 
