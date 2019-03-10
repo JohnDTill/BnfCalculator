@@ -12,6 +12,7 @@ public:
     virtual void deleteChildren() override;
     virtual std::string toString() override;
     virtual double evaluate() override;
+    virtual AstNode* simplify() override;
 };
 
 #endif // LOGNODE_H
