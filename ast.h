@@ -10,6 +10,7 @@
 #include <eliteralnode.h>
 #include <exponentnode.h>
 #include <factorialnode.h>
+#include <flatmultiplynode.h>
 #include <groupingnode.h>
 #include <lognode.h>
 #include <modulusnode.h>

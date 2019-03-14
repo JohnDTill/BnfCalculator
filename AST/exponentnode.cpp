@@ -2,20 +2,11 @@
 
 #include "rationalliteralnode.h"
 
-ExponentNode::ExponentNode(AstNode* lhs, AstNode* rhs){
-    this->lhs = lhs;
-    this->rhs = rhs;
-}
-
-void ExponentNode::deleteChildren(){
-    lhs->deleteChildren();
-    delete lhs;
-    rhs->deleteChildren();
-    delete rhs;
-}
+ExponentNode::ExponentNode(AstNode* lhs, AstNode* rhs)
+    : BinaryNode(lhs,rhs){}
 
 std::string ExponentNode::toString(){
-    return lhs->toString() + '^' + rhs->toString();
+    return lhs->toString(getPrecedence()) + '^' + rhs->toString(getPrecedence());
 }
 
 double ExponentNode::evaluate(){
@@ -41,4 +32,8 @@ AstNode* ExponentNode::simplify(){
     }
 
     return this;
+}
+
+NodeType ExponentNode::getType(){
+    return EXPONENT;
 }

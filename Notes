@@ -1,6 +1,5 @@
-There is a lot that happens now with replacing terms, and the nodes start to be interdependent.
-The OO-AST starts to see some payoff.
-
+The AST to string conversion needs work:
+    -Multiplication by a rational number with 1 as the numerator should be printed as division
 
 Expression => Below
 Addition => Below (('+' | '-') Below)*

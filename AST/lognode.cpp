@@ -3,14 +3,8 @@
 #include "rationalliteralnode.h"
 
 
-LogNode::LogNode(AstNode* child){
-    this->child = child;
-}
-
-void LogNode::deleteChildren(){
-    child->deleteChildren();
-    delete child;
-}
+LogNode::LogNode(AstNode* child)
+    : UnaryNode(child){}
 
 std::string LogNode::toString(){
     return "log(" + child->toString() + ')';
@@ -36,4 +30,8 @@ AstNode *LogNode::simplify(){
     }
 
     return this;
+}
+
+NodeType LogNode::getType(){
+    return LOG;
 }

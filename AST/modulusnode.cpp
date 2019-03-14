@@ -2,20 +2,11 @@
 
 #include "rationalliteralnode.h"
 
-ModulusNode::ModulusNode(AstNode* lhs, AstNode* rhs){
-    this->lhs = lhs;
-    this->rhs = rhs;
-}
-
-void ModulusNode::deleteChildren(){
-    lhs->deleteChildren();
-    delete lhs;
-    rhs->deleteChildren();
-    delete rhs;
-}
+ModulusNode::ModulusNode(AstNode* lhs, AstNode* rhs)
+    : BinaryNode(lhs,rhs){}
 
 std::string ModulusNode::toString(){
-    return lhs->toString() + '%' + rhs->toString();
+    return lhs->toString(getPrecedence()) + '%' + rhs->toString(getPrecedence());
 }
 
 double ModulusNode::evaluate(){
@@ -37,5 +28,9 @@ AstNode* ModulusNode::simplify(){
     }
 
     return this;
+}
+
+NodeType ModulusNode::getType(){
+    return MODULUS;
 }
 

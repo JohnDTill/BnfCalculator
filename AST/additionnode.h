@@ -1,19 +1,16 @@
 #ifndef ADDITIONNODE_H
 #define ADDITIONNODE_H
 
-#include "../astnode.h"
+#include "binarynode.h"
 
-class AdditionNode : public AstNode{
-private:
-    AstNode* lhs;
-    AstNode* rhs;
-
+class AdditionNode : public BinaryNode{
 public:
     AdditionNode(AstNode* lhs, AstNode* rhs);
-    virtual void deleteChildren() override;
     virtual std::string toString() override;
     virtual double evaluate() override;
     virtual AstNode* simplify() override;
+    virtual NodeType getType() override;
+    virtual Precedence getPrecedence() override {return PREC_ADDITION;}
 };
 
 #endif // ADDITIONNODE_H

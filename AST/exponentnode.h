@@ -1,19 +1,16 @@
 #ifndef EXPONENTNODE_H
 #define EXPONENTNODE_H
 
-#include "../astnode.h"
+#include "binarynode.h"
 
-class ExponentNode : public AstNode{
-private:
-    AstNode* lhs;
-    AstNode* rhs;
-
+class ExponentNode : public BinaryNode{
 public:
     ExponentNode(AstNode* lhs, AstNode* rhs);
-    virtual void deleteChildren() override;
     virtual std::string toString() override;
     virtual double evaluate() override;
     virtual AstNode* simplify() override;
+    virtual NodeType getType() override;
+    virtual Precedence getPrecedence() override {return PREC_EXPONENTIATION;}
 };
 
 #endif // EXPONENTNODE_H

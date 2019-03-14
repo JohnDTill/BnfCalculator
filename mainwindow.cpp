@@ -27,7 +27,10 @@ void MainWindow::on_pushButton_clicked(){
         if(ui->radioDouble->isChecked()){
             ui->lineEdit->setText(QString::number(root->evaluate()).replace("e","*10^").replace("+",""));
         }else{
-            root = root->simplify();
+            AstNode* before_change = root;
+            while(before_change != (root = root->simplify())){
+                before_change = root;
+            }
             ui->lineEdit->setText(QString::fromStdString(root->toString()));
         }
         root->deleteChildren();

@@ -1,21 +1,13 @@
 #include "multiplynode.h"
 
+#include "flatmultiplynode.h"
 #include "rationalliteralnode.h"
 
-MultiplyNode::MultiplyNode(AstNode* lhs, AstNode* rhs){
-    this->lhs = lhs;
-    this->rhs = rhs;
-}
-
-void MultiplyNode::deleteChildren(){
-    lhs->deleteChildren();
-    delete lhs;
-    rhs->deleteChildren();
-    delete rhs;
-}
+MultiplyNode::MultiplyNode(AstNode* lhs, AstNode* rhs)
+    : BinaryNode(lhs,rhs){}
 
 std::string MultiplyNode::toString(){
-    return lhs->toString() + '*' + rhs->toString();
+    return lhs->toString(getPrecedence()) + '*' + rhs->toString(getPrecedence());
 }
 
 double MultiplyNode::evaluate(){
@@ -35,5 +27,13 @@ AstNode* MultiplyNode::simplify(){
         return mult;
     }
 
-    return this;
+    FlatMultiplyNode* n = new FlatMultiplyNode;
+    n->addChild(lhs);
+    n->addChild(rhs);
+
+    return n;
+}
+
+NodeType MultiplyNode::getType(){
+    return MULTIPLY;
 }

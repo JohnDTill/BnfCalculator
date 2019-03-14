@@ -1,11 +1,10 @@
-#ifndef DIVIDENODE_H
-#define DIVIDENODE_H
+#ifndef FLATMULTIPLYNODE_H
+#define FLATMULTIPLYNODE_H
 
-#include "binarynode.h"
+#include "narynode.h"
 
-class DivideNode : public BinaryNode{
+class FlatMultiplyNode : public NAryNode{
 public:
-    DivideNode(AstNode* lhs, AstNode* rhs);
     virtual std::string toString() override;
     virtual double evaluate() override;
     virtual AstNode* simplify() override;
@@ -13,4 +12,4 @@ public:
     virtual Precedence getPrecedence() override {return PREC_MULTIPLICATION;}
 };
 
-#endif // DIVIDENODE_H
+#endif // FLATMULTIPLYNODE_H

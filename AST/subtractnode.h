@@ -1,19 +1,16 @@
 #ifndef SUBTRACTNODE_H
 #define SUBTRACTNODE_H
 
-#include "../astnode.h"
+#include "binarynode.h"
 
-class SubtractNode : public AstNode{
-private:
-    AstNode* lhs;
-    AstNode* rhs;
-
+class SubtractNode : public BinaryNode{
 public:
     SubtractNode(AstNode* lhs, AstNode* rhs);
-    virtual void deleteChildren() override;
     virtual std::string toString() override;
     virtual double evaluate() override;
     virtual AstNode* simplify() override;
+    virtual NodeType getType() override;
+    virtual Precedence getPrecedence() override {return PREC_ADDITION;}
 };
 
 #endif // SUBTRACTNODE_H

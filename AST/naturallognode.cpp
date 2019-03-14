@@ -2,14 +2,8 @@
 
 #include "rationalliteralnode.h"
 
-NaturalLogNode::NaturalLogNode(AstNode* child){
-    this->child = child;
-}
-
-void NaturalLogNode::deleteChildren(){
-    child->deleteChildren();
-    delete child;
-}
+NaturalLogNode::NaturalLogNode(AstNode* child)
+    : UnaryNode(child){}
 
 std::string NaturalLogNode::toString(){
     return "ln(" + child->toString() + ')';
@@ -35,4 +29,8 @@ AstNode *NaturalLogNode::simplify(){
     }
 
     return this;
+}
+
+NodeType NaturalLogNode::getType(){
+    return NATURALLOG;
 }

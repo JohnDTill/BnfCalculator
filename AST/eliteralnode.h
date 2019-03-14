@@ -1,13 +1,13 @@
 #ifndef ELITERALNODE_H
 #define ELITERALNODE_H
 
-#include "../astnode.h"
+#include "terminalnode.h"
 
-class eLiteralNode : public AstNode{
+class eLiteralNode : public TerminalNode{
 public:
-    virtual void deleteChildren() override{}
     virtual std::string toString() override;
     virtual double evaluate() override;
+    virtual NodeType getType() override;
 };
 
 #endif // ELITERALNODE_H

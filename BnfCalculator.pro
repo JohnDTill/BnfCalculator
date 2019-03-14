@@ -32,7 +32,13 @@ SOURCES += \
     AST/groupingnode.cpp \
     AST/lognode.cpp \
     AST/naturallognode.cpp \
-    AST/negatenode.cpp
+    AST/negatenode.cpp \
+    AST/flatmultiplynode.cpp \
+    AST/unarynode.cpp \
+    AST/terminalnode.cpp \
+    AST/binarynode.cpp \
+    AST/commutativebinarynode.cpp \
+    AST/narynode.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -62,7 +68,13 @@ HEADERS += \
     AST/groupingnode.h \
     AST/lognode.h \
     AST/naturallognode.h \
-    AST/negatenode.h
+    AST/negatenode.h \
+    AST/flatmultiplynode.h \
+    AST/unarynode.h \
+    AST/terminalnode.h \
+    AST/binarynode.h \
+    AST/commutativebinarynode.h \
+    AST/narynode.h
 
 FORMS += mainwindow.ui
 

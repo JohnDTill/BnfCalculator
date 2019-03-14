@@ -7,3 +7,7 @@ std::string eLiteralNode::toString(){
 double eLiteralNode::evaluate(){
     return 2.71828182845904523536;
 }
+
+NodeType eLiteralNode::getType(){
+    return eLITERAL;
+}

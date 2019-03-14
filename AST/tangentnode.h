@@ -1,18 +1,16 @@
 #ifndef TANGENTNODE_H
 #define TANGENTNODE_H
 
-#include "../astnode.h"
+#include "unarynode.h"
 
-class TangentNode : public AstNode{
-private:
-    AstNode* child;
-
+class TangentNode : public UnaryNode{
 public:
     TangentNode(AstNode* child);
-    virtual void deleteChildren() override;
     virtual std::string toString() override;
     virtual double evaluate() override;
     virtual AstNode* simplify() override;
+    virtual NodeType getType() override;
+    virtual Precedence getPrecedence() override {return PREC_NONE;}
 };
 
 #endif // TANGENTNODE_H

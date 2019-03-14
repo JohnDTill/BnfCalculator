@@ -1,19 +1,19 @@
 #ifndef FACTORIALNODE_H
 #define FACTORIALNODE_H
 
-#include "../astnode.h"
+#include "unarynode.h"
 
-class FactorialNode : public AstNode{
+class FactorialNode : public UnaryNode{
 private:
-    AstNode* child;
     unsigned long long line;
 
 public:
     FactorialNode(AstNode* child, unsigned long long line);
-    virtual void deleteChildren() override;
     virtual std::string toString() override;
     virtual double evaluate() override;
     virtual AstNode* simplify() override;
+    virtual NodeType getType() override;
+    virtual Precedence getPrecedence() override {return PREC_FACTORIAL;}
 };
 
 #endif // FACTORIALNODE_H

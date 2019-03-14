@@ -195,27 +195,27 @@ public:
         return scratch;
     }
 
-    bool operator>(big_uint other){
+    bool operator>(big_uint other) const{
         return isGreater(digits, other.digits);
     }
 
-    bool operator==(big_uint other){
+    bool operator==(big_uint other) const{
         return isEqual(digits, other.digits);
     }
 
-    bool operator!=(big_uint other){
+    bool operator!=(big_uint other) const{
         return !isEqual(digits, other.digits);
     }
 
-    bool operator>=(big_uint other){
+    bool operator>=(big_uint other) const{
         return operator>(other) || operator==(other);
     }
 
-    bool operator<(big_uint other){
+    bool operator<(big_uint other) const{
         return other >= *this;
     }
 
-    bool operator<=(big_uint other){
+    bool operator<=(big_uint other) const{
         return other > *this;
     }
 
@@ -364,13 +364,18 @@ public:
         this->is_negative = is_negative;
     }
 
-    std::string toString(){
+    std::string toString() const{
         std::string str = "";
         if(is_negative && numerator!=big_uint("0")) str += "-";
         str += numerator.toString();
         if(denominator!=big_uint("1") && numerator!=big_uint("0")) str += " / " + denominator.toString();
 
         return str;
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const rational& r){
+        os << r.toString();
+        return os;
     }
 
     void simplify(){
@@ -440,6 +445,26 @@ public:
         big_uint right_num_scaled = other.numerator*right_factor;
 
         return rational(left_num_scaled % right_num_scaled, denominator*left_factor, is_negative!=other.is_negative);
+    }
+
+    rational operator+=(rational other){
+        *this = *this + other;
+        return *this;
+    }
+
+    rational operator-=(rational other){
+        *this = *this - other;
+        return *this;
+    }
+
+    rational operator*=(rational other){
+        *this = *this * other;
+        return *this;
+    }
+
+    rational operator/=(rational other){
+        *this = *this / other;
+        return *this;
     }
 };
 

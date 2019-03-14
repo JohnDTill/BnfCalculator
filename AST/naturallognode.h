@@ -1,17 +1,15 @@
 #ifndef NATURALLOGNODE_H
 #define NATURALLOGNODE_H
 
-#include "../astnode.h"
+#include "unarynode.h"
 
-class NaturalLogNode : public AstNode{
-private:
-    AstNode* child;
-
+class NaturalLogNode : public UnaryNode{
 public:
     NaturalLogNode(AstNode* child);
-    virtual void deleteChildren() override;
     virtual std::string toString() override;
     virtual double evaluate() override;
     virtual AstNode* simplify() override;
+    virtual NodeType getType() override;
+    virtual Precedence getPrecedence() override {return PREC_NONE;}
 };
 #endif // NATURALLOGNODE_H

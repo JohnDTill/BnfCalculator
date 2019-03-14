@@ -2,17 +2,11 @@
 
 #include "rationalliteralnode.h"
 
-NegateNode::NegateNode(AstNode* child){
-    this->child = child;
-}
-
-void NegateNode::deleteChildren(){
-    child->deleteChildren();
-    delete child;
-}
+NegateNode::NegateNode(AstNode* child)
+    : UnaryNode(child){}
 
 std::string NegateNode::toString(){
-    return '-' + child->toString();
+    return '-' + child->toString(getPrecedence());
 }
 
 double NegateNode::evaluate(){
@@ -32,4 +26,8 @@ AstNode* NegateNode::simplify(){
     }
 
     return this;
+}
+
+NodeType NegateNode::getType(){
+    return NEGATE;
 }

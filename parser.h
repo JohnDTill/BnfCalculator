@@ -3,6 +3,7 @@
 
 #include "ast.h"
 #include "errorhandling.h"
+#include "scanner.h"
 #include "token.h"
 
 class AstNode;
@@ -132,14 +133,14 @@ private:
     AstNode* multiplication(){ //Left associative (only multiplication is commutative)
         AstNode* expr = leftUnary();
 
-        while(peek(ASTRISK) || peek(BACKSLASH) || peek(FORWARDSLASH) || peek(MODULUS)){
+        while(peek(ASTRISK) || peek(BACKSLASH) || peek(FORWARDSLASH) || peek(PERCENT)){
             if(match(ASTRISK)){
                 expr = new MultiplyNode(expr, leftUnary());
             }else if(match(BACKSLASH)){
                 expr = new DivideNode(expr, leftUnary());
             }else if(match(FORWARDSLASH)){
                 expr = new DivideNode(leftUnary(), expr);
-            }else if(match(MODULUS)){
+            }else if(match(PERCENT)){
                 expr = new ModulusNode(expr, leftUnary());
             }
         }
@@ -168,9 +169,13 @@ public:
         if(p.curr!=token_stream.size()) error("Parser Error");
         return expr;
     }
+
+    static AstNode* parse(std::string source){
+        return parse(Scanner::getTokenStream(source), source);
+    }
 };
 
-AstNode* Parser::expression(){
+inline AstNode* Parser::expression(){
     return addition();
 }
 

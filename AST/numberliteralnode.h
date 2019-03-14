@@ -1,18 +1,18 @@
 #ifndef NUMBERLITERALNODE_H
 #define NUMBERLITERALNODE_H
 
-#include "../astnode.h"
+#include "terminalnode.h"
 
-class NumberLiteralNode : public AstNode{
+class NumberLiteralNode : public TerminalNode{
 private:
     std::string val;
 
 public:
     NumberLiteralNode(std::string num_str);
-    virtual void deleteChildren() override{}
     virtual std::string toString() override;
     virtual double evaluate() override;
     virtual AstNode* simplify() override;
+    virtual NodeType getType() override;
 };
 
 #endif // NUMBERLITERALNODE_H

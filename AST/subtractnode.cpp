@@ -2,20 +2,11 @@
 
 #include "rationalliteralnode.h"
 
-SubtractNode::SubtractNode(AstNode* lhs, AstNode* rhs){
-    this->lhs = lhs;
-    this->rhs = rhs;
-}
-
-void SubtractNode::deleteChildren(){
-    lhs->deleteChildren();
-    delete lhs;
-    rhs->deleteChildren();
-    delete rhs;
-}
+SubtractNode::SubtractNode(AstNode* lhs, AstNode* rhs)
+    : BinaryNode(lhs,rhs){}
 
 std::string SubtractNode::toString(){
-    return lhs->toString() + " - " + rhs->toString();
+    return lhs->toString(getPrecedence()) + " - " + rhs->toString(getPrecedence());
 }
 
 double SubtractNode::evaluate(){
@@ -36,4 +27,8 @@ AstNode* SubtractNode::simplify(){
     }
 
     return this;
+}
+
+NodeType SubtractNode::getType(){
+    return SUBTRACT;
 }

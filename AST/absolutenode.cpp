@@ -3,17 +3,11 @@
 #include "negatenode.h"
 #include "rationalliteralnode.h"
 
-AbsoluteNode::AbsoluteNode(AstNode* child){
-    this->child = child;
-}
-
-void AbsoluteNode::deleteChildren(){
-    child->deleteChildren();
-    delete child;
-}
+AbsoluteNode::AbsoluteNode(AstNode* child)
+    : UnaryNode(child){}
 
 std::string AbsoluteNode::toString(){
-    return '|' + child->toString() + '|';
+    return '|' + child->toString(getPrecedence()) + '|';
 }
 
 double AbsoluteNode::evaluate(){
@@ -37,4 +31,8 @@ AstNode* AbsoluteNode::simplify(){
     }
 
     return this;
+}
+
+NodeType AbsoluteNode::getType(){
+    return ABSOLUTE;
 }

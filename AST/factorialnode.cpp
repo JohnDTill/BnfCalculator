@@ -2,18 +2,13 @@
 
 #include "rationalliteralnode.h"
 
-FactorialNode::FactorialNode(AstNode* child, unsigned long long line){
-    this->child = child;
+FactorialNode::FactorialNode(AstNode* child, unsigned long long line)
+    : UnaryNode(child){
     this->line = line;
 }
 
-void FactorialNode::deleteChildren(){
-    child->deleteChildren();
-    delete child;
-}
-
 std::string FactorialNode::toString(){
-    return child->toString() + '!';
+    return child->toString(getPrecedence()) + '!';
 }
 
 double FactorialNode::evaluate(){
@@ -47,4 +42,8 @@ AstNode* FactorialNode::simplify(){
     }
 
     return this;
+}
+
+NodeType FactorialNode::getType(){
+    return FACTORIAL;
 }

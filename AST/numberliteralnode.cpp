@@ -40,3 +40,7 @@ AstNode* NumberLiteralNode::simplify() {
 
     return new RationalLiteralNode(r);
 }
+
+NodeType NumberLiteralNode::getType(){
+    return NUMBERLITERAL;
+}

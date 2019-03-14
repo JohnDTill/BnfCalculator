@@ -2,20 +2,11 @@
 
 #include "rationalliteralnode.h"
 
-AdditionNode::AdditionNode(AstNode* lhs, AstNode* rhs){
-    this->lhs = lhs;
-    this->rhs = rhs;
-}
-
-void AdditionNode::deleteChildren(){
-    lhs->deleteChildren();
-    delete lhs;
-    rhs->deleteChildren();
-    delete rhs;
-}
+AdditionNode::AdditionNode(AstNode* lhs, AstNode* rhs)
+    : BinaryNode(lhs,rhs){}
 
 std::string AdditionNode::toString(){
-    return lhs->toString() + " + " + rhs->toString();
+    return lhs->toString(getPrecedence()) + " + " + rhs->toString(getPrecedence());
 }
 
 double AdditionNode::evaluate(){
@@ -36,4 +27,8 @@ AstNode* AdditionNode::simplify(){
     }
 
     return this;
+}
+
+NodeType AdditionNode::getType(){
+    return ADDITION;
 }
