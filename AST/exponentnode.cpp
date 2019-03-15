@@ -20,7 +20,7 @@ AstNode* ExponentNode::simplify(){
     RationalLiteralNode* nl = dynamic_cast<RationalLiteralNode*>(lhs);
     RationalLiteralNode* nr = dynamic_cast<RationalLiteralNode*>(rhs);
     if(nl && nr){
-        if(nr->val.denominator==big_uint("1")){
+        if(nr->val.isIntegerNumber()){
             bool is_negative = (nl->val.is_negative && nr->val.numerator.isOdd());
             bool reciprocal = nr->val.is_negative;
             rational exp = reciprocal ? rational(pow(nl->val.denominator,nr->val.numerator), pow(nl->val.numerator,nr->val.numerator), is_negative)

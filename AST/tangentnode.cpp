@@ -20,21 +20,20 @@ AstNode* TangentNode::simplify(){
     child = getSimplifiedChild(child);
 
     if(RationalLiteralNode* n = dynamic_cast<RationalLiteralNode*>(child)){
-        if(n->val.numerator == big_uint("0") && n->val.denominator != big_uint("0")){
+        if(n->val.isZero()){
             return n;
         }
     }else if(PiLiteralNode* n = dynamic_cast<PiLiteralNode*>(child)){
         delete n;
-        return new RationalLiteralNode(rational());
+        return new RationalLiteralNode(0);
     }else if(FlatMultiplyNode* n = dynamic_cast<FlatMultiplyNode*>(child)){
         if(n->children.size()==2){
             n->sortChildren();
 
             if(dynamic_cast<PiLiteralNode*>(n->children[0]))
             if(RationalLiteralNode* r = dynamic_cast<RationalLiteralNode*>(n->children[1])){
-                rational two(big_uint("2"), big_uint("1"), false);
-                rational arg = r->val % two;
-                if(r->val.is_negative) arg+=two;
+                rational arg = r->val % 2;
+                if(r->val.is_negative) arg+=2;
 
                 //DO THIS - rely on sine and cosine implementations
                 std::unordered_map<std::string, std::string> exact_values = {

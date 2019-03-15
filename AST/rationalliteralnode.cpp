@@ -19,6 +19,6 @@ NodeType RationalLiteralNode::getType(){
 }
 
 Precedence RationalLiteralNode::getPrecedence(){
-    if(val.denominator != big_uint("1")) return PREC_MULTIPLICATION;
+    if(!val.denominator.isOne()) return PREC_MULTIPLICATION;
     else return PREC_NONE;
 }

@@ -30,12 +30,12 @@ AstNode* FactorialNode::simplify(){
     child = getSimplifiedChild(child);
 
     if(RationalLiteralNode* n = dynamic_cast<RationalLiteralNode*>(child)){
-        if(n->val.denominator != big_uint("1"))
+        if(!n->val.denominator.isOne())
             error("Factorial has non-integer argument");
         if(n->val.is_negative) error("Factorial has negative argument");
 
-        big_uint factorial("1");
-        for(big_uint i("2"); i < n->val.numerator; factorial *= i++);
+        big_uint factorial = 1;
+        for(big_uint i = 2; i < n->val.numerator; factorial *= i++);
         n->val.numerator = factorial;
 
         return n;

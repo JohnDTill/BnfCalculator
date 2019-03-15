@@ -17,13 +17,11 @@ AstNode *NaturalLogNode::simplify(){
     child = getSimplifiedChild(child);
 
     if(RationalLiteralNode* n = dynamic_cast<RationalLiteralNode*>(child)){
-        if(n->val.numerator == n->val.denominator && n->val.numerator != big_uint("0")){
-            n->val.numerator = big_uint("0");
-            n->val.denominator = big_uint("1");
-            n->val.is_negative = false;
+        if(n->val.isOne()){
+            n->val = 0;
 
             return n;
-        }else if(n->val.is_negative && n->val.numerator != big_uint("0")){
+        }else if(n->val.is_negative && !n->val.numerator.isZero()){
             error("Attempted to take log of negative number (" + n->toString() + ')');
         }
     }

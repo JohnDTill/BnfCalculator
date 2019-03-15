@@ -19,10 +19,18 @@ public:
         for(unsigned long long i = val.size()-1; i < val.size(); i--){
             digits.push_back(static_cast<uint8_t>(val[i] - '0'));
         }
+        removeLeadingZeros(digits);
     }
 
     big_uint(std::vector<uint8_t> digits){
         this->digits = digits;
+    }
+
+    big_uint(unsigned long long val){
+        while(val > 0){
+            digits.push_back(static_cast<uint8_t>(val%10));
+            val/=10;
+        }
     }
 
     static void removeLeadingZeros(std::vector<uint8_t>& digits){
@@ -38,9 +46,8 @@ public:
         std::string str;
         str.resize(digits.size());
 
-        for(unsigned long long i = 0; i < digits.size(); i++){
+        for(unsigned long long i = 0; i < digits.size(); i++)
             str[digits.size()-1-i] = static_cast<char>(digits[i]) + '0';
-        }
 
         return str;
     }
@@ -54,19 +61,24 @@ public:
         return os;
     }
 
-    bool isEven(){
+    bool isZero() const{
+        return digits.size()==0;
+    }
+
+    bool isOne() const{
+        return digits.size()==1 && digits[0]==1;
+    }
+
+    bool isEven() const{
         return digits.size()==0 || digits[0]%2==0;
     }
 
-    bool isOdd(){
+    bool isOdd() const{
         return !isEven();
     }
 
     /* Determine if one unsigned integer is greater than another */
-    static bool isGreater(std::vector<uint8_t> a, std::vector<uint8_t> b){
-        removeLeadingZeros(a);
-        removeLeadingZeros(b);
-
+    static bool isGreater(const std::vector<uint8_t>& a, const std::vector<uint8_t>& b){
         if(a.size() > b.size()) return true;
         else if(a.size() < b.size()) return false;
 
@@ -79,10 +91,7 @@ public:
     }
 
     /* Determine if one unsigned integer is equal to another */
-    static bool isEqual(std::vector<uint8_t> a, std::vector<uint8_t> b){
-        removeLeadingZeros(a);
-        removeLeadingZeros(b);
-
+    static bool isEqual(const std::vector<uint8_t>& a, const std::vector<uint8_t>& b){
         if(a.size() > b.size()) return false;
         else if(a.size() < b.size()) return false;
 
@@ -95,7 +104,7 @@ public:
     }
 
     /* Add two unsigned big integers */
-    static std::vector<uint8_t> add(std::vector<uint8_t> a, std::vector<uint8_t> b){
+    static std::vector<uint8_t> add(const std::vector<uint8_t>& a, const std::vector<uint8_t>& b){
         if(a.size() < b.size())
             return add(b,a);
 
@@ -120,16 +129,19 @@ public:
             }else{
                 scratch[i] = a[i] + carry;
                 carry = false;
+                break;
             }
         }
         if(carry) scratch[a.size()] = 1;
         else scratch.pop_back();
 
+        removeLeadingZeros(scratch);
+
         return scratch;
     }
 
     /* Subtract an unsigned integer b from a, where a is greater than b. */
-    static std::vector<uint8_t> sub(std::vector<uint8_t> a, std::vector<uint8_t> b){
+    static std::vector<uint8_t> sub(const std::vector<uint8_t>& a, const std::vector<uint8_t>& b){
         if(isGreater(b,a)) error("big_uint underflow due to subtraction.");
 
         std::vector<uint8_t> scratch;
@@ -147,13 +159,14 @@ public:
             }
         }
 
+
         for(unsigned long long i = b.size(); i < a.size(); i++){
-            if(a[i]==0 && carry){
+            if(carry && a[i]==0){
                 scratch[i] = 9;
-                carry = true;
             }else{
                 scratch[i] = a[i] - carry;
-                carry = false;
+                for(unsigned long long j = i+1; j < a.size(); j++) scratch[j] = a[j];
+                break;
             }
         }
         removeLeadingZeros(scratch);
@@ -162,7 +175,7 @@ public:
     }
 
     /* Multiply two unsigned integers */
-    static std::vector<uint8_t> mult(std::vector<uint8_t> a, std::vector<uint8_t> b){
+    static std::vector<uint8_t> mult(const std::vector<uint8_t>& a, const std::vector<uint8_t>& b){
         if(a.size() < b.size()) return mult(b,a);
 
         std::vector<uint8_t> scratch;
@@ -195,78 +208,101 @@ public:
         return scratch;
     }
 
-    bool operator>(big_uint other) const{
+    bool operator>(const big_uint& other) const{
         return isGreater(digits, other.digits);
     }
 
-    bool operator==(big_uint other) const{
+    bool operator==(const big_uint& other) const{
         return isEqual(digits, other.digits);
     }
 
-    bool operator!=(big_uint other) const{
+    bool operator!=(const big_uint& other) const{
         return !isEqual(digits, other.digits);
     }
 
-    bool operator>=(big_uint other) const{
+    bool operator>=(const big_uint& other) const{
         return operator>(other) || operator==(other);
     }
 
-    bool operator<(big_uint other) const{
+    bool operator<(const big_uint& other) const{
         return other >= *this;
     }
 
-    bool operator<=(big_uint other) const{
+    bool operator<=(const big_uint& other) const{
         return other > *this;
     }
 
-    big_uint operator+(big_uint other){
+    bool operator==(unsigned long long val) const{
+        unsigned long long i = 0;
+        while(val > 0){
+            if(digits.size()==i || digits[i] != val%10) return false;
+            val/=10;
+            i++;
+        }
+        return i==digits.size();
+    }
+
+    bool operator!=(unsigned long long val) const{
+        return !operator==(val);
+    }
+
+    big_uint operator+(const big_uint& other) const{
         return big_uint(add(digits,other.digits));
     }
 
-    big_uint operator-(big_uint other){
+    big_uint operator-(const big_uint& other) const{
         return big_uint(sub(digits, other.digits));
     }
 
-    big_uint operator*(big_uint other){
+    big_uint operator*(const big_uint& other) const{
         return big_uint(mult(digits,other.digits));
     }
 
-    big_uint operator+=(big_uint other){
+    big_uint operator+=(const big_uint& other){
         *this = operator+(other);
         return *this;
     }
 
-    big_uint operator-=(big_uint other){
+    big_uint operator-=(const big_uint& other){
         *this = operator-(other);
         return *this;
     }
 
-    big_uint operator*=(big_uint other){
+    big_uint operator*=(const big_uint& other){
         *this = operator*(other);
         return *this;
     }
 
     big_uint operator++(){
-        return operator+=(big_uint("1"));
+        unsigned long long i;
+        for(i = 0; i < digits.size() && digits[i]==9; i++)
+            digits[i] = 0;
+        if(i==digits.size()) digits.push_back(1);
+        else digits[i]++;
+        return *this;
     }
 
     big_uint operator--(){
-        return operator-=(big_uint("1"));
+        unsigned long long i;
+        for(i = 0; digits[i]==0; i++)
+            digits[i] = 9;
+        digits[i]--;
+        return *this;
     }
 
     big_uint operator++(int){
         big_uint pre_increment = *this;
-        operator+=(big_uint("1"));
+        operator++();
         return pre_increment;
     }
 
     big_uint operator--(int){
         big_uint pre_decrement = *this;
-        operator-=(big_uint("1"));
+        operator--();
         return pre_decrement;
     }
 
-    big_uint e(unsigned long long power){
+    big_uint e(unsigned long long power) const{
         std::vector<uint8_t> raised;
         for(unsigned long long i = 0; i < power; i++) raised.push_back(0);
         for(unsigned long long i = 0; i < digits.size(); i++) raised.push_back(digits[i]);
@@ -298,20 +334,20 @@ public:
         remainder_out = dividend;
     }
 
-    big_uint operator/(big_uint other){
+    big_uint operator/(const big_uint& other) const{
         big_uint quotient;
         big_uint remainder;
         longDivision(*this,other,quotient,remainder);
-        if(remainder!=big_uint("0")) error("Integer division had remainder");
+        if(remainder!=big_uint("0")) error("Integer division had remainder - use longDivision() where remainders may exist.");
 
         return quotient;
     }
 
-    big_uint operator/=(big_uint other){
+    big_uint operator/=(const big_uint& other){
         return *this = *this / other;
     }
 
-    big_uint operator%(big_uint other){
+    big_uint operator%(const big_uint& other) const{
         big_uint quotient;
         big_uint remainder;
         longDivision(*this,other,quotient,remainder);
@@ -320,26 +356,25 @@ public:
     }
 };
 
-inline big_uint pow(big_uint a, big_uint b){
-    if(b == big_uint("0")){
-        return big_uint("1");
+inline big_uint pow(const big_uint& a, const big_uint& b){
+    if(b.isZero()){
+        return 1;
     }else if(b.isEven()){
         big_uint remainder, half_b;
-        big_uint::longDivision(b, big_uint("2"), half_b, remainder);
+        big_uint::longDivision(b, 2, half_b, remainder);
 
         return pow(a*a,half_b);
     }else{
-        big_uint remainder;
-        big_uint half_b_minus_1 = b - big_uint("1");
-        big_uint::longDivision(half_b_minus_1, big_uint("2"), half_b_minus_1, remainder);
+        big_uint remainder, half_b_minus_1;
+        big_uint::longDivision(b-1, 2, half_b_minus_1, remainder);
 
         return a*pow(a*a, half_b_minus_1);
     }
 }
 
-inline big_uint greatestCommonDivisor(big_uint a, big_uint b){
-    if(b==big_uint("0"))      return a;
-    else if(a==big_uint("0")) return b;
+inline big_uint greatestCommonDivisor(const big_uint& a, const big_uint& b){
+    if(b.isZero())            return a;
+    else if(a.isZero())       return b;
     else if(a==b)             return a;
     else if(a > b)            return greatestCommonDivisor(a-b,b);
     else                      return greatestCommonDivisor(a,b-a);
@@ -364,11 +399,27 @@ public:
         this->is_negative = is_negative;
     }
 
+    rational(unsigned long long num, unsigned long long denom, bool is_negative){
+        numerator = num;
+        denominator = denom;
+        this->is_negative = is_negative;
+    }
+
+    rational(long long num){
+        is_negative = (num < 0);
+        numerator = static_cast<unsigned long long>(is_negative ? -num : num);
+        denominator = 1;
+    }
+
+    rational reciprocal() const{
+        return rational(denominator, numerator, is_negative);
+    }
+
     std::string toString() const{
         std::string str = "";
-        if(is_negative && numerator!=big_uint("0")) str += "-";
+        if(is_negative && !numerator.isZero()) str += "-";
         str += numerator.toString();
-        if(denominator!=big_uint("1") && numerator!=big_uint("0")) str += " / " + denominator.toString();
+        if(!denominator.isOne() && !numerator.isZero()) str += " / " + denominator.toString();
 
         return str;
     }
@@ -378,31 +429,43 @@ public:
         return os;
     }
 
+    bool isZero() const{
+        return numerator.isZero() && !denominator.isZero();
+    }
+
+    bool isOne() const{
+        return numerator==denominator && !numerator.isZero() && !is_negative;
+    }
+
+    bool isIntegerNumber(){
+        return denominator.isOne();
+    }
+
     void simplify(){
         big_uint gcd = greatestCommonDivisor(numerator,denominator);
         numerator /= gcd;
         denominator /= gcd;
     }
 
-    rational operator*(rational other){
+    rational operator*(const rational& other) const{
         big_uint num_unsimplified = numerator*other.numerator;
         big_uint den_unsimplified = denominator*other.denominator;
         big_uint gcd = greatestCommonDivisor(num_unsimplified,den_unsimplified);
         return rational(num_unsimplified/gcd, den_unsimplified/gcd, is_negative != other.is_negative);
     }
 
-    rational operator/(rational other){
+    rational operator/(const rational& other) const{
         big_uint num_unsimplified = numerator*other.denominator;
         big_uint den_unsimplified = denominator*other.numerator;
         big_uint gcd = greatestCommonDivisor(num_unsimplified,den_unsimplified);
         return rational(num_unsimplified/gcd, den_unsimplified/gcd, is_negative != other.is_negative);
     }
 
-    rational operator-(){
+    rational operator-() const{
         return rational(numerator,denominator,!is_negative);
     }
 
-    rational operator+(rational other){
+    rational operator+(const rational& other) const{
         big_uint gcd = greatestCommonDivisor(denominator, other.denominator);
         big_uint left_factor = other.denominator/gcd;
         big_uint right_factor = denominator/gcd;
@@ -419,7 +482,7 @@ public:
         }
     }
 
-    rational operator-(rational other){
+    rational operator-(const rational& other) const{
         big_uint gcd = greatestCommonDivisor(denominator, other.denominator);
         big_uint left_factor = other.denominator/gcd;
         big_uint right_factor = denominator/gcd;
@@ -436,7 +499,7 @@ public:
         }
     }
 
-    rational operator%(rational other){
+    rational operator%(const rational& other) const{
         big_uint gcd = greatestCommonDivisor(denominator, other.denominator);
         big_uint left_factor = other.denominator/gcd;
         big_uint right_factor = denominator/gcd;
@@ -447,22 +510,22 @@ public:
         return rational(left_num_scaled % right_num_scaled, denominator*left_factor, is_negative!=other.is_negative);
     }
 
-    rational operator+=(rational other){
+    rational operator+=(const rational& other){
         *this = *this + other;
         return *this;
     }
 
-    rational operator-=(rational other){
+    rational operator-=(const rational& other){
         *this = *this - other;
         return *this;
     }
 
-    rational operator*=(rational other){
+    rational operator*=(const rational& other){
         *this = *this * other;
         return *this;
     }
 
-    rational operator/=(rational other){
+    rational operator/=(const rational& other){
         *this = *this / other;
         return *this;
     }

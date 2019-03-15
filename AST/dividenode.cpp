@@ -29,12 +29,12 @@ AstNode* DivideNode::simplify(){
     }else if(nr){
         FlatMultiplyNode* m = new FlatMultiplyNode();
         if(NegateNode* nl = dynamic_cast<NegateNode*>(lhs)){
-            RationalLiteralNode* recip = new RationalLiteralNode(rational(nr->val.denominator, nr->val.numerator, !nr->val.is_negative));
+            RationalLiteralNode* recip = new RationalLiteralNode(-nr->val.reciprocal());
             m->addChild(nl->child);
             delete nl;
             m->addChild(recip);
         }else{
-            RationalLiteralNode* recip = new RationalLiteralNode(rational(nr->val.denominator, nr->val.numerator, nr->val.is_negative));
+            RationalLiteralNode* recip = new RationalLiteralNode(nr->val.reciprocal());
             m->addChild(lhs);
             m->addChild(recip);
         }
