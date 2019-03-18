@@ -1,5 +1,6 @@
 #include "subtractnode.h"
 
+#include "additionnode.h"
 #include "rationalliteralnode.h"
 
 SubtractNode::SubtractNode(AstNode* lhs, AstNode* rhs)
@@ -24,6 +25,9 @@ AstNode* SubtractNode::simplify(){
         delete nl;
         delete nr;
         return sub;
+    }else if(nr){
+        nr->val.is_negative = !nr->val.is_negative;
+        return new AdditionNode(lhs,rhs);
     }
 
     return this;

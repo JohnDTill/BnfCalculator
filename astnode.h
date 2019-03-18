@@ -13,19 +13,22 @@ enum NodeType{
     eLITERAL,
     EXPONENT,
     FACTORIAL,
+    FLATADDITION,
     FLATMULTIPLY,
     GROUPING,
     LOG,
     MODULUS,
     MULTIPLY,
+    NANLITERAL,
     NATURALLOG,
     NEGATE,
     NUMBERLITERAL,
     piLITERAL,
-    RATIONALLITERAL,
     SINE,
     SUBTRACT,
-    TANGENT
+    TANGENT,
+
+    RATIONALLITERAL
 };
 
 enum Precedence{
@@ -58,6 +61,9 @@ public:
         //DO THIS - continue making comparisons
 
         return false;
+    }
+    bool compareStrings(AstNode* other){
+        return (getType()==other->getType() && toString() == other->toString());
     }
 
 protected:

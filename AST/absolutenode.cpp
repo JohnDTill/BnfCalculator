@@ -30,6 +30,13 @@ AstNode* AbsoluteNode::simplify(){
         return n;
     }
 
+    double estimated_value = child->evaluate();
+    if(estimated_value > 1e-12){
+        return child;
+    }else if(estimated_value < -1e-12){
+        return  new NegateNode(child);
+    }
+
     return this;
 }
 

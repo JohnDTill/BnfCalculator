@@ -1,5 +1,6 @@
 #include "negatenode.h"
 
+#include "subtractnode.h"
 #include "rationalliteralnode.h"
 
 NegateNode::NegateNode(AstNode* child)
@@ -22,6 +23,11 @@ AstNode* NegateNode::simplify(){
         return grandchild;
     }else if(RationalLiteralNode* n = dynamic_cast<RationalLiteralNode*>(child)){
         n->val.is_negative = !n->val.is_negative;
+        return n;
+    }else if(SubtractNode* n = dynamic_cast<SubtractNode*>(child)){
+        AstNode* temp = n->lhs;
+        n->lhs = n->rhs;
+        n->rhs = temp;
         return n;
     }
 

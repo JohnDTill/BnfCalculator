@@ -1,6 +1,7 @@
 #include "tangentnode.h"
 
 #include "flatmultiplynode.h"
+#include "nanliteralnode.h"
 #include "piliteralnode.h"
 #include "rationalliteralnode.h"
 #include "../parser.h"
@@ -46,10 +47,11 @@ AstNode* TangentNode::simplify(){
                 };
 
                 std::string val = arg.toString();
-                if(val=="1 / 2"){
-                    error("tan(pi/2) is undefined");
-                }else if(val=="3 / 2"){
-                    error("tan(-pi/2) is undefined");
+                if(val=="1 / 2" || val=="3 / 2"){
+                    n->deleteChildren();
+                    delete n;
+
+                    return new NanLiteralNode();
                 }
 
                 auto result = exact_values.find(val);

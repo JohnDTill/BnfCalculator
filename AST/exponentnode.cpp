@@ -20,15 +20,21 @@ AstNode* ExponentNode::simplify(){
     RationalLiteralNode* nl = dynamic_cast<RationalLiteralNode*>(lhs);
     RationalLiteralNode* nr = dynamic_cast<RationalLiteralNode*>(rhs);
     if(nl && nr){
-        if(nr->val.isIntegerNumber()){
-            bool is_negative = (nl->val.is_negative && nr->val.numerator.isOdd());
-            bool reciprocal = nr->val.is_negative;
-            rational exp = reciprocal ? rational(pow(nl->val.denominator,nr->val.numerator), pow(nl->val.numerator,nr->val.numerator), is_negative)
-                                      : rational(pow(nl->val.numerator,nr->val.numerator), pow(nl->val.denominator,nr->val.numerator), is_negative);
+        rational result;
+        bool found_num_root, found_denom_root, multiply_by_i;
+        pow(nl->val, nr->val, result, found_num_root, found_denom_root, multiply_by_i);
+
+        if(multiply_by_i) error("Imaginary square roots not supported.");
+
+        if(found_num_root && found_denom_root){
             delete nl;
             delete nr;
-            return new RationalLiteralNode(exp);
+            return new RationalLiteralNode(result);
         }
+
+        //DO THIS: several simplifications can be done for non-perfect roots
+        //  -Handling perfect numerator or denominator
+        //  -Finding perfect factors
     }
 
     return this;

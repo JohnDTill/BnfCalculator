@@ -1,15 +1,13 @@
-The AST to string conversion needs work:
-    -Multiplication by a rational number with 1 as the numerator should be printed as division
-Big-num library:
-	-Need to define rational exponentiation as part of library
+Big num:
+    -Factoring
 Symbolic mode still needs to address:
-	-Fractional exponentiation
-	-Logs
-	-More robust trig evaluations
-	-Trig identities
+    -Logs
+    -More robust trig evaluations
+    -Trig identities
 AST:
-	-Need to flatten addition
-	-Need to implement many algebraic rewriting simplifications
+    -Need to implement many algebraic rewriting simplifications
+    -Factoring is complicated
+        -Need to choose which terms to factor, e.g. a*b + a*c + b*c
 
 
 Grammar:

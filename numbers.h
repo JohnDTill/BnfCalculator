@@ -225,11 +225,11 @@ public:
     }
 
     bool operator<(const big_uint& other) const{
-        return other >= *this;
+        return other > *this;
     }
 
     bool operator<=(const big_uint& other) const{
-        return other > *this;
+        return other >= *this;
     }
 
     bool operator==(unsigned long long val) const{
@@ -372,13 +372,43 @@ inline big_uint pow(const big_uint& a, const big_uint& b){
     }
 }
 
+inline bool root(const big_uint& a, const big_uint& b, big_uint& val){
+    if(a==0 || a==1){
+        val = a;
+        return true;
+    }
+
+    big_uint low = 1;
+    big_uint high = a;
+
+    //Use bisection method to search for root
+    for(;;){
+        big_uint combined = low + high;
+        if(combined.isOdd()) combined--;
+        big_uint candidate = combined/2;
+        if(candidate==low) return false;
+        big_uint eval = pow(candidate,b);
+
+        if(eval > a){
+            high = candidate;
+        }else if(eval < a){
+            low = candidate;
+        }else{
+            val = candidate;
+            return true;
+        }
+    }
+
+    //DO THIS: you know the error is proportional to the guess raised to the b,
+    //         so you should be able to do much better than bisection.
+}
+
 inline big_uint greatestCommonDivisor(const big_uint& a, const big_uint& b){
     if(b.isZero())            return a;
     else if(a.isZero())       return b;
     else if(a==b)             return a;
     else if(a > b)            return greatestCommonDivisor(a-b,b);
     else                      return greatestCommonDivisor(a,b-a);
-
 }
 
 
@@ -437,7 +467,7 @@ public:
         return numerator==denominator && !numerator.isZero() && !is_negative;
     }
 
-    bool isIntegerNumber(){
+    bool isIntegerNumber() const{
         return denominator.isOne();
     }
 
@@ -530,5 +560,40 @@ public:
         return *this;
     }
 };
+
+inline void pow(const rational& base, const rational& exponent, rational& val_out, bool& found_num_root, bool& found_denom_root, bool& multiply_by_i){
+    if(exponent.is_negative){
+        pow(base.reciprocal(), -exponent, val_out, found_num_root, found_denom_root, multiply_by_i);
+        return;
+    }
+
+    bool root_contains_i = base.is_negative && exponent.denominator.isEven();
+    multiply_by_i = root_contains_i && exponent.numerator.isOdd();
+    if(!root_contains_i) val_out.is_negative = base.is_negative && exponent.numerator.isOdd();
+    else val_out.is_negative = (exponent.numerator + 2*base.is_negative)%4 >= 2;
+
+    if(exponent.isIntegerNumber()){
+        found_num_root = found_denom_root = true;
+        val_out.numerator = pow(base.numerator,exponent.numerator);
+        val_out.denominator = pow(base.denominator,exponent.numerator);
+        return;
+    }
+
+    big_uint num_root, denom_root;
+    found_num_root = root(base.numerator, exponent.denominator, num_root);
+    found_denom_root = root(base.denominator, exponent.denominator, denom_root);
+
+    if(found_num_root){
+        val_out.numerator = pow(num_root,exponent.numerator);
+    }else{
+        val_out.numerator = pow(base.numerator,exponent.numerator);
+    }
+
+    if(found_denom_root){
+        val_out.denominator = pow(denom_root,exponent.numerator);
+    }else{
+        val_out.denominator = pow(base.denominator,exponent.numerator);
+    }
+}
 
 #endif // NUMBERS_H

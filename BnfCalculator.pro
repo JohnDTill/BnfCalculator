@@ -38,7 +38,9 @@ SOURCES += \
     AST/terminalnode.cpp \
     AST/binarynode.cpp \
     AST/commutativebinarynode.cpp \
-    AST/narynode.cpp
+    AST/narynode.cpp \
+    AST/nanliteralnode.cpp \
+    AST/flatadditionnode.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -74,7 +76,9 @@ HEADERS += \
     AST/terminalnode.h \
     AST/binarynode.h \
     AST/commutativebinarynode.h \
-    AST/narynode.h
+    AST/narynode.h \
+    AST/nanliteralnode.h \
+    AST/flatadditionnode.h
 
 FORMS += mainwindow.ui
 

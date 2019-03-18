@@ -13,6 +13,7 @@ public:
     void addChild(AstNode* n);
     virtual void deleteChildren() override;
     virtual void sortChildren() override;
+    void simplifyChildren();
 
 protected:
     std::vector<AstNode*> select(std::function<bool(AstNode*)> predicate);

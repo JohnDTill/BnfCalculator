@@ -1,5 +1,6 @@
 #include "additionnode.h"
 
+#include "flatadditionnode.h"
 #include "rationalliteralnode.h"
 
 AdditionNode::AdditionNode(AstNode* lhs, AstNode* rhs)
@@ -26,7 +27,11 @@ AstNode* AdditionNode::simplify(){
         return add;
     }
 
-    return this;
+    FlatAdditionNode* n = new FlatAdditionNode;
+    n->addChild(lhs);
+    n->addChild(rhs);
+
+    return n;
 }
 
 NodeType AdditionNode::getType(){

@@ -21,6 +21,11 @@ void NAryNode::sortChildren(){
     std::sort(children.begin(), children.end(), isLess);
 }
 
+void NAryNode::simplifyChildren(){
+    for(unsigned long long i = 0; i < children.size(); i++)
+        children[i] = getSimplifiedChild(children[i]);
+}
+
 std::vector<AstNode*> NAryNode::select(std::function<bool(AstNode*)> predicate){
     std::vector<AstNode*> found;
     for(AstNode* child : children){

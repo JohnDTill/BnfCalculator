@@ -11,6 +11,7 @@ public:
     RationalLiteralNode(rational val);
     virtual std::string toString() override;
     virtual double evaluate() override;
+    virtual AstNode* simplify() override;
     virtual NodeType getType() override;
     virtual Precedence getPrecedence() override;
 };
