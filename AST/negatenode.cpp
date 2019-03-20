@@ -1,7 +1,6 @@
 #include "negatenode.h"
 
-#include "subtractnode.h"
-#include "rationalliteralnode.h"
+#include "flatadditionnode.h"
 
 NegateNode::NegateNode(AstNode* child)
     : UnaryNode(child){}
@@ -17,21 +16,10 @@ double NegateNode::evaluate(){
 AstNode* NegateNode::simplify(){
     child = getSimplifiedChild(child);
 
-    if(NegateNode* n = dynamic_cast<NegateNode*>(child)){
-        AstNode* grandchild = n->child;
-        delete n;
-        return grandchild;
-    }else if(RationalLiteralNode* n = dynamic_cast<RationalLiteralNode*>(child)){
-        n->val.is_negative = !n->val.is_negative;
-        return n;
-    }else if(SubtractNode* n = dynamic_cast<SubtractNode*>(child)){
-        AstNode* temp = n->lhs;
-        n->lhs = n->rhs;
-        n->rhs = temp;
-        return n;
-    }
+    FlatAdditionNode* n = new FlatAdditionNode;
+    n->addSecond(child);
 
-    return this;
+    return n;
 }
 
 NodeType NegateNode::getType(){

@@ -36,7 +36,7 @@ AstNode* NumberLiteralNode::simplify() {
 
     big_uint n(num);
     big_uint d(den);
-    rational r(n, d, is_negative);
+    rational r(n, 1, is_negative);
 
     return new RationalLiteralNode(r);
 }

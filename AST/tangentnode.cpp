@@ -28,11 +28,11 @@ AstNode* TangentNode::simplify(){
         delete n;
         return new RationalLiteralNode(0);
     }else if(FlatMultiplyNode* n = dynamic_cast<FlatMultiplyNode*>(child)){
-        if(n->children.size()==2){
+        if(n->first.size()==2 && n->second.size()==0){
             n->sortChildren();
 
-            if(dynamic_cast<PiLiteralNode*>(n->children[0]))
-            if(RationalLiteralNode* r = dynamic_cast<RationalLiteralNode*>(n->children[1])){
+            if(dynamic_cast<PiLiteralNode*>(n->first[0]))
+            if(RationalLiteralNode* r = dynamic_cast<RationalLiteralNode*>(n->first[1])){
                 rational arg = r->val % 2;
                 if(r->val.is_negative) arg+=2;
 

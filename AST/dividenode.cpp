@@ -1,8 +1,6 @@
 #include "dividenode.h"
 
 #include "flatmultiplynode.h"
-#include "negatenode.h"
-#include "rationalliteralnode.h"
 
 DivideNode::DivideNode(AstNode* lhs, AstNode* rhs)
     : BinaryNode(lhs,rhs){}
@@ -19,30 +17,11 @@ AstNode* DivideNode::simplify(){
     lhs = getSimplifiedChild(lhs);
     rhs = getSimplifiedChild(rhs);
 
-    RationalLiteralNode* nl = dynamic_cast<RationalLiteralNode*>(lhs);
-    RationalLiteralNode* nr = dynamic_cast<RationalLiteralNode*>(rhs);
-    if(nl && nr){
-        RationalLiteralNode* div = new RationalLiteralNode(nl->val / nr->val);
-        delete nl;
-        delete nr;
-        return div;
-    }else if(nr){
-        FlatMultiplyNode* m = new FlatMultiplyNode();
-        if(NegateNode* nl = dynamic_cast<NegateNode*>(lhs)){
-            RationalLiteralNode* recip = new RationalLiteralNode(-nr->val.reciprocal());
-            m->addChild(nl->child);
-            delete nl;
-            m->addChild(recip);
-        }else{
-            RationalLiteralNode* recip = new RationalLiteralNode(nr->val.reciprocal());
-            m->addChild(lhs);
-            m->addChild(recip);
-        }
-        delete nr;
-        return m;
-    }
+    FlatMultiplyNode* n = new FlatMultiplyNode;
+    n->addFirst(lhs);
+    n->addSecond(rhs);
 
-    return this;
+    return n;
 }
 
 NodeType DivideNode::getType(){

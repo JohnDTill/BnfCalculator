@@ -1,13 +1,10 @@
 #ifndef FLATMULTIPLYNODE_H
 #define FLATMULTIPLYNODE_H
 
-#include "narynode.h"
+#include "doublenarynode.h"
 class ExponentNode;
 
-class FlatMultiplyNode : public NAryNode{
-private:
-    bool negate = false;
-
+class FlatMultiplyNode : public DoubleNAryNode{
 public:
     virtual std::string toString() override;
     virtual double evaluate() override;
@@ -18,10 +15,10 @@ public:
 private:
     void associateChildMultiplications();
     AstNode* checkForNan();
+    void foldNegations();
     void combineRationalTerms();
-    void cullOnes();
     AstNode* checkForZero();
-    void combineNegations();
+    void checkForCancellations();
 };
 
 #endif // FLATMULTIPLYNODE_H

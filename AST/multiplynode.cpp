@@ -1,7 +1,6 @@
 #include "multiplynode.h"
 
 #include "flatmultiplynode.h"
-#include "rationalliteralnode.h"
 
 MultiplyNode::MultiplyNode(AstNode* lhs, AstNode* rhs)
     : BinaryNode(lhs,rhs){}
@@ -18,18 +17,9 @@ AstNode* MultiplyNode::simplify(){
     lhs = getSimplifiedChild(lhs);
     rhs = getSimplifiedChild(rhs);
 
-    RationalLiteralNode* nl = dynamic_cast<RationalLiteralNode*>(lhs);
-    RationalLiteralNode* nr = dynamic_cast<RationalLiteralNode*>(rhs);
-    if(nl && nr){
-        RationalLiteralNode* mult = new RationalLiteralNode(nl->val * nr->val);
-        delete nl;
-        delete nr;
-        return mult;
-    }
-
     FlatMultiplyNode* n = new FlatMultiplyNode;
-    n->addChild(lhs);
-    n->addChild(rhs);
+    n->addFirst(lhs);
+    n->addFirst(rhs);
 
     return n;
 }

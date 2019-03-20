@@ -1,9 +1,9 @@
 #ifndef FLATADDITIONNODE_H
 #define FLATADDITIONNODE_H
 
-#include "narynode.h"
+#include "doublenarynode.h"
 
-class FlatAdditionNode : public NAryNode{
+class FlatAdditionNode : public DoubleNAryNode{
 public:
     virtual std::string toString() override;
     virtual double evaluate() override;
@@ -15,7 +15,7 @@ private:
     void associateChildAdditions();
     AstNode* checkForNan();
     void combineRationalTerms();
-    void cullZeroes();
+    void checkForCancellations();
 };
 
 #endif // FLATADDITIONNODE_H

@@ -125,11 +125,9 @@ public:
         for(unsigned long long i = b.size(); i < a.size(); i++){
             if(a[i]==9 && carry){
                 scratch[i] = 0;
-                carry = true;
             }else{
                 scratch[i] = a[i] + carry;
                 carry = false;
-                break;
             }
         }
         if(carry) scratch[a.size()] = 1;
@@ -541,7 +539,7 @@ public:
     }
 
     rational operator+=(const rational& other){
-        *this = *this + other;
+        *this = operator+(other);
         return *this;
     }
 
