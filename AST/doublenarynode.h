@@ -1,7 +1,6 @@
 #ifndef DOUBLENARYNODE_H
 #define DOUBLENARYNODE_H
 
-
 #include "../astnode.h"
 #include <vector>
 #include <functional>

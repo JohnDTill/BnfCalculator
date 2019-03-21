@@ -1,7 +1,8 @@
 #include "lognode.h"
 
+#include "exponentnode.h"
+#include "nanliteralnode.h"
 #include "rationalliteralnode.h"
-
 
 LogNode::LogNode(AstNode* child)
     : UnaryNode(child){}
@@ -18,12 +19,25 @@ AstNode *LogNode::simplify(){
     child = getSimplifiedChild(child);
 
     if(RationalLiteralNode* n = dynamic_cast<RationalLiteralNode*>(child)){
-        if(n->val.isOne()){
-            n->val = 0;
+        if(n->val.numerator.isZero()){} //Math library returns negative inf
+        if(n->val.is_negative) return new NanLiteralNode();
+        if(n->val.denominator != 1) return this;
 
+        unsigned long long log_val;
+
+        if(n->val.numerator.log(log_val)){
+            n->val.numerator = log_val;
             return n;
-        }else if(n->val.is_negative && !n->val.numerator.isZero()){
-            error("Attempted to take log of negative number (" + n->toString() + ')');
+        }
+    }else if(ExponentNode* n = dynamic_cast<ExponentNode*>(child)){
+        //log(10^x) => x
+        if(RationalLiteralNode* lhs = dynamic_cast<RationalLiteralNode*>(n->lhs)){
+            if(lhs->val == 10){
+                AstNode* ans = n->rhs;
+                delete lhs;
+                delete n;
+                return ans;
+            }
         }
     }
 

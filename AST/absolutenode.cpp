@@ -1,6 +1,6 @@
 #include "absolutenode.h"
 
-#include "negatenode.h"
+#include "flatadditionnode.h"
 #include "rationalliteralnode.h"
 
 AbsoluteNode::AbsoluteNode(AstNode* child)
@@ -17,11 +17,7 @@ double AbsoluteNode::evaluate(){
 AstNode* AbsoluteNode::simplify(){
     child = getSimplifiedChild(child);
 
-    if(NegateNode* n = dynamic_cast<NegateNode*>(child)){
-        child = n->child;
-        delete n;
-        return simplify();
-    }else if(AbsoluteNode* n = dynamic_cast<AbsoluteNode*>(child)){
+    if(AbsoluteNode* n = dynamic_cast<AbsoluteNode*>(child)){
         child = n->child;
         delete n;
         return simplify();
@@ -34,7 +30,9 @@ AstNode* AbsoluteNode::simplify(){
     if(estimated_value > 1e-12){
         return child;
     }else if(estimated_value < -1e-12){
-        return  new NegateNode(child);
+        FlatAdditionNode* negate = new FlatAdditionNode;
+        negate->addSecond(child);
+        return negate;
     }
 
     return this;

@@ -4,7 +4,20 @@
 #include "piliteralnode.h"
 #include "rationalliteralnode.h"
 #include "../parser.h"
-#include <unordered_map>
+
+const std::unordered_map<std::string, std::string> SineNode::exact_values = {
+    {"0", "0"},
+    {"1 / 12", "(2 - 3^(1/2))^(1/2)/2"},
+    {"1 / 10", "(5^(1/2)-1)/4"},
+    {"1 / 6", "1/2"},
+    {"1 / 5", "2^(1/2)*(5 - 5^(1/2))/4"},
+    {"1 / 4", "1 / 2^(1/2)"},
+    {"3 / 10", "(5^(1/2)+1)/4"},
+    {"1 / 3", "3^(1/2)/2"},
+    {"2 / 5", "2^(1/2)*(5 + 5^(1/2))^(1/2)/4"},
+    {"5 / 12", "(2 + 3^(1/2))^(1/2)/2"},
+    {"1 / 2", "1"}
+};
 
 SineNode::SineNode(AstNode* child)
     : UnaryNode(child){}
@@ -33,34 +46,12 @@ AstNode* SineNode::simplify(){
 
             if(dynamic_cast<PiLiteralNode*>(n->first[0]))
             if(RationalLiteralNode* r = dynamic_cast<RationalLiteralNode*>(n->first[1])){
-                rational arg = r->val % 2;
-                if(r->val.is_negative) arg+=2;
+                rational coeff = n->negate ? -r->val : r->val;
+                std::string lookup = lookupPiCoeff(coeff);
 
-                std::unordered_map<std::string, std::string> exact_values = {
-                    {"0", "0"},
-                    {"1", "0"},
-                    {"1 / 2", "1"},
-                    {"-1 / 2", "-1"},
-                    {"1 / 4", "1 / 2^(1/2)"},
-                    {"3 / 4", "1 / 2^(1/2)"},
-                    {"5 / 4", "-1 / 2^(1/2)"},
-                    {"7 / 4", "-1 / 2^(1/2)"},
-                    {"1 / 3", "3^(1/2)/2"},
-                    {"2 / 3", "3^(1/2)/2"},
-                    {"4 / 3", "-3^(1/2)/2"},
-                    {"5 / 3", "-3^(1/2)/2"},
-                    {"1 / 6", "1/2"},
-                    {"5 / 6", "1/2"},
-                    {"7 / 6", "-1/2"},
-                    {"11 / 6", "-1/2"}
-                };
-
-                std::string val = arg.toString();
-                auto result = exact_values.find(val);
-                if(result != exact_values.end()){
-                    n->deleteChildren();
-                    delete n;
-                    return Parser::parse(exact_values[val]);
+                if(lookup.size() > 0){
+                    deleteChildren();
+                    return Parser::parse(lookup);
                 }
             }
         }
@@ -71,4 +62,28 @@ AstNode* SineNode::simplify(){
 
 NodeType SineNode::getType(){
     return SINE;
+}
+
+std::string SineNode::lookupPiCoeff(rational coeff){
+    coeff %= 2;
+    if(coeff.is_negative) coeff+=2;
+
+    std::string str = "";
+    if(coeff > rational(3,2)){
+        str = "-";
+        coeff = rational(2) - coeff;
+    }else if(coeff > 1){
+        str = "-";
+        coeff -= 1;
+    }else if(coeff > rational(1,2)){
+        coeff = rational(1) - coeff;
+    }
+
+    auto result = exact_values.find(coeff.toString());
+    if(result != exact_values.end()){
+        str += result->second;
+        return str;
+    }else{
+        return "";
+    }
 }

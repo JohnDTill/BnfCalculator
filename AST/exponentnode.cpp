@@ -27,8 +27,7 @@ AstNode* ExponentNode::simplify(){
         if(multiply_by_i) error("Imaginary square roots not supported.");
 
         if(found_num_root && found_denom_root){
-            delete nl;
-            delete nr;
+            deleteChildren();
             return new RationalLiteralNode(result);
         }
 

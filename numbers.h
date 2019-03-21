@@ -352,6 +352,15 @@ public:
 
         return remainder;
     }
+
+    inline bool log(unsigned long long& val){
+        if(digits[digits.size()-1]!=1) return false;
+        for(unsigned long long i = digits.size()-2; i < digits.size(); i--)
+            if(digits[i]!=0) return false;
+
+        val = digits.size()-1;
+        return true;
+    }
 };
 
 inline big_uint pow(const big_uint& a, const big_uint& b){
@@ -439,6 +448,12 @@ public:
         denominator = 1;
     }
 
+    rational(long long num, long long denom){
+        is_negative = (num < 0 || denom < 0) && !(num < 0 && denom < 0);
+        numerator = static_cast<unsigned long long>(num < 0 ? -num : num);
+        denominator = static_cast<unsigned long long>(denom < 0 ? -denom : denom);
+    }
+
     rational reciprocal() const{
         return rational(denominator, numerator, is_negative);
     }
@@ -475,6 +490,50 @@ public:
         denominator /= gcd;
     }
 
+    bool operator==(const rational& other) const{
+        return is_negative==other.is_negative && numerator==other.numerator && denominator==other.denominator;
+    }
+
+    bool operator!=(const rational& other) const{
+        return !operator==(other);
+    }
+
+    bool operator>(const rational& other) const{
+        if(isZero()){
+            if(other.isZero()) return false;
+            else return other.is_negative;
+        }
+        if(other.isZero()) return !is_negative;
+        if(!is_negative && other.is_negative) return true;
+
+        big_uint scaled = numerator*other.denominator;
+        big_uint other_scaled = other.numerator*denominator;
+        if(is_negative) return scaled < other_scaled;
+        else return scaled > other_scaled;
+    }
+
+    bool operator>=(const rational& other) const{
+        if(isZero()){
+            if(other.isZero()) return true;
+            else return other.is_negative;
+        }
+        if(other.isZero()) return !is_negative;
+        if(!is_negative && other.is_negative) return true;
+
+        big_uint scaled = numerator*other.denominator;
+        big_uint other_scaled = other.numerator*denominator;
+        if(is_negative) return scaled <= other_scaled;
+        else return scaled >= other_scaled;
+    }
+
+    bool operator<(const rational& other) const{
+        return other > *this;
+    }
+
+    bool operator<=(const rational& other) const{
+        return other >= *this;
+    }
+
     rational operator*(const rational& other) const{
         big_uint num_unsimplified = numerator*other.numerator;
         big_uint den_unsimplified = denominator*other.denominator;
@@ -501,13 +560,17 @@ public:
         big_uint left_num_scaled = numerator*left_factor;
         big_uint right_num_scaled = other.numerator*right_factor;
 
+        rational result;
         if(is_negative==other.is_negative){
-            return rational(left_num_scaled + right_num_scaled, denominator*left_factor, is_negative);
+            result = rational(left_num_scaled + right_num_scaled, denominator*left_factor, is_negative);
         }else if(left_num_scaled > right_num_scaled){
-            return rational(left_num_scaled - right_num_scaled, denominator*left_factor, is_negative);
+            result = rational(left_num_scaled - right_num_scaled, denominator*left_factor, is_negative);
         }else{
-            return rational(right_num_scaled - left_num_scaled, denominator*left_factor, !is_negative);
+            result = rational(right_num_scaled - left_num_scaled, denominator*left_factor, !is_negative);
         }
+        result.simplify();
+
+        return result;
     }
 
     rational operator-(const rational& other) const{
@@ -518,13 +581,17 @@ public:
         big_uint left_num_scaled = numerator*left_factor;
         big_uint right_num_scaled = other.numerator*right_factor;
 
+        rational result;
         if(is_negative!=other.is_negative){
-            return rational(left_num_scaled + right_num_scaled, denominator*left_factor, is_negative);
+            result = rational(left_num_scaled + right_num_scaled, denominator*left_factor, is_negative);
         }else if(left_num_scaled > right_num_scaled){
-            return rational(left_num_scaled - right_num_scaled, denominator*left_factor, is_negative);
+            result = rational(left_num_scaled - right_num_scaled, denominator*left_factor, is_negative);
         }else{
-            return rational(right_num_scaled - left_num_scaled, denominator*left_factor, !is_negative);
+            result = rational(right_num_scaled - left_num_scaled, denominator*left_factor, !is_negative);
         }
+        result.simplify();
+
+        return result;
     }
 
     rational operator%(const rational& other) const{
@@ -535,7 +602,10 @@ public:
         big_uint left_num_scaled = numerator*left_factor;
         big_uint right_num_scaled = other.numerator*right_factor;
 
-        return rational(left_num_scaled % right_num_scaled, denominator*left_factor, is_negative!=other.is_negative);
+        rational result = rational(left_num_scaled % right_num_scaled, denominator*left_factor, is_negative);
+        result.simplify();
+
+        return result;
     }
 
     rational operator+=(const rational& other){
@@ -555,6 +625,11 @@ public:
 
     rational operator/=(const rational& other){
         *this = *this / other;
+        return *this;
+    }
+
+    rational operator%=(const rational& other){
+        *this = *this % other;
         return *this;
     }
 };

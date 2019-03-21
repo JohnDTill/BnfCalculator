@@ -6,6 +6,9 @@ class ExponentNode;
 
 class FlatMultiplyNode : public DoubleNAryNode{
 public:
+    bool negate = false;
+
+public:
     virtual std::string toString() override;
     virtual double evaluate() override;
     virtual AstNode* simplify() override;
@@ -15,8 +18,8 @@ public:
 private:
     void associateChildMultiplications();
     AstNode* checkForNan();
-    void foldNegations();
     void combineRationalTerms();
+    void foldNegations();
     AstNode* checkForZero();
     void checkForCancellations();
 };

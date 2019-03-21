@@ -34,34 +34,12 @@ AstNode* CosineNode::simplify(){
 
             if(dynamic_cast<PiLiteralNode*>(n->first[0]))
             if(RationalLiteralNode* r = dynamic_cast<RationalLiteralNode*>(n->first[1])){
-                rational arg = r->val % 2;
-                if(r->val.is_negative) arg+=2;
+                rational coeff = n->negate ? -r->val : r->val;
+                std::string lookup = SineNode::lookupPiCoeff(coeff + rational(1,2));
 
-                std::unordered_map<std::string, std::string> exact_values = {
-                    {"0", "1"},
-                    {"1", "-1"},
-                    {"1 / 2", "0"},
-                    {"-1 / 2", "0"},
-                    {"1 / 4", "1 / 2^(1/2)"},
-                    {"7 / 4", "1 / 2^(1/2)"},
-                    {"3 / 4", "-1 / 2^(1/2)"},
-                    {"5 / 4", "-1 / 2^(1/2)"},
-                    {"1 / 3", "1 / 2"},
-                    {"5 / 3", "1 / 2"},
-                    {"2 / 3", "-1 / 2"},
-                    {"4 / 3", "-1 / 2"},
-                    {"1 / 6", "3^(1/2)/2"},
-                    {"11 / 6", "3^(1/2)/2"},
-                    {"5 / 6", "-3^(1/2)/2"},
-                    {"7 / 6", "-3^(1/2)/2"}
-                };
-
-                std::string val = arg.toString();
-                auto result = exact_values.find(val);
-                if(result != exact_values.end()){
-                    n->deleteChildren();
-                    delete n;
-                    return Parser::parse(exact_values[val]);
+                if(lookup.size() > 0){
+                    deleteChildren();
+                    return Parser::parse(lookup);
                 }
             }
         }

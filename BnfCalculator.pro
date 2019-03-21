@@ -18,12 +18,8 @@ SOURCES += \
         AST/piliteralnode.cpp \
         AST/numberliteralnode.cpp \
     AST/rationalliteralnode.cpp \
-    AST/subtractnode.cpp \
-    AST/multiplynode.cpp \
     AST/modulusnode.cpp \
     AST/exponentnode.cpp \
-    AST/dividenode.cpp \
-    AST/additionnode.cpp \
     AST/tangentnode.cpp \
     AST/sinenode.cpp \
     AST/cosinenode.cpp \
@@ -32,13 +28,10 @@ SOURCES += \
     AST/groupingnode.cpp \
     AST/lognode.cpp \
     AST/naturallognode.cpp \
-    AST/negatenode.cpp \
     AST/flatmultiplynode.cpp \
     AST/unarynode.cpp \
     AST/terminalnode.cpp \
     AST/binarynode.cpp \
-    AST/commutativebinarynode.cpp \
-    AST/narynode.cpp \
     AST/nanliteralnode.cpp \
     AST/flatadditionnode.cpp \
     AST/doublenarynode.cpp
@@ -57,12 +50,8 @@ HEADERS += \
         AST/piliteralnode.h \
         AST/numberliteralnode.h \
     AST/rationalliteralnode.h \
-    AST/subtractnode.h \
-    AST/multiplynode.h \
     AST/modulusnode.h \
     AST/exponentnode.h \
-    AST/dividenode.h \
-    AST/additionnode.h \
     AST/tangentnode.h \
     AST/sinenode.h \
     AST/cosinenode.h \
@@ -71,13 +60,10 @@ HEADERS += \
     AST/groupingnode.h \
     AST/lognode.h \
     AST/naturallognode.h \
-    AST/negatenode.h \
     AST/flatmultiplynode.h \
     AST/unarynode.h \
     AST/terminalnode.h \
     AST/binarynode.h \
-    AST/commutativebinarynode.h \
-    AST/narynode.h \
     AST/nanliteralnode.h \
     AST/flatadditionnode.h \
     AST/doublenarynode.h

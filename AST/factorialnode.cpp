@@ -35,7 +35,7 @@ AstNode* FactorialNode::simplify(){
         if(n->val.is_negative) error("Factorial has negative argument");
 
         big_uint factorial = 1;
-        for(big_uint i = 2; i < n->val.numerator; factorial *= i++);
+        for(big_uint i = 2; i <= n->val.numerator; factorial *= i++);
         n->val.numerator = factorial;
 
         return n;

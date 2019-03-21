@@ -7,9 +7,7 @@
 
 enum NodeType{
     ABSOLUTE,
-    ADDITION,
     COSINE,
-    DIVIDE,
     eLITERAL,
     EXPONENT,
     FACTORIAL,
@@ -18,14 +16,11 @@ enum NodeType{
     GROUPING,
     LOG,
     MODULUS,
-    MULTIPLY,
     NANLITERAL,
     NATURALLOG,
-    NEGATE,
     NUMBERLITERAL,
     piLITERAL,
     SINE,
-    SUBTRACT,
     TANGENT,
 
     RATIONALLITERAL

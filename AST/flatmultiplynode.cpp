@@ -8,7 +8,8 @@
 std::string FlatMultiplyNode::toString(){
     if(first.size()+second.size()==0) error("FLATMULTIPLYNODE with no children.");
 
-    std::string str = first.size() > 0 ? first[0]->toString() : "1";
+    std::string str = negate ? "-" : "";
+    str += first.size() > 0 ? first[0]->toString(getPrecedence()) : "1";
     for(unsigned long long i = 1; i < first.size(); i++){
         if(RationalLiteralNode* n = dynamic_cast<RationalLiteralNode*>(first[i])){
             if(n->val.numerator.isOne()){
@@ -33,7 +34,7 @@ std::string FlatMultiplyNode::toString(){
 double FlatMultiplyNode::evaluate(){
     if(first.size()+second.size()==0) error("FLATMULTIPLYNODE with no children.");
 
-    double val = 1;
+    double val = negate ? -1 : 1;
     for(AstNode* c : first)
         val *= c->evaluate();
     for(AstNode* c : second)
@@ -46,12 +47,12 @@ AstNode* FlatMultiplyNode::simplify(){
     simplifyChildren();
     associateChildMultiplications();
     if(AstNode* n = checkForNan()) return n;
-    foldNegations();
     combineRationalTerms();
+    foldNegations();
     if(AstNode* n = checkForZero()) return n;
     checkForCancellations();
-    if(first.size()+second.size() == 1) return first.size()==1 ? first[0] : this;
-    if(first.size()+second.size() == 0) return new RationalLiteralNode(1);
+    if(first.size()==1 && second.size() == 0 && !negate) return first[0];
+    if(first.size()+second.size() == 0) return new RationalLiteralNode(negate ? -1 : 1);
 
     sortChildren();
 
@@ -67,6 +68,7 @@ void FlatMultiplyNode::associateChildMultiplications(){
         if(FlatMultiplyNode* n = dynamic_cast<FlatMultiplyNode*>(first[i])){
             for(AstNode* nc : n->first) addFirst(nc);
             for(AstNode* nc : n->second) addSecond(nc);
+            if(n->negate) negate = !negate;
 
             first.erase(first.begin() + static_cast<long long>(i));
             i--;
@@ -77,6 +79,7 @@ void FlatMultiplyNode::associateChildMultiplications(){
         if(FlatMultiplyNode* n = dynamic_cast<FlatMultiplyNode*>(second[i])){
             for(AstNode* nc : n->first) addSecond(nc);
             for(AstNode* nc : n->second) addFirst(nc);
+            if(n->negate) negate = !negate;
 
             second.erase(second.begin() + static_cast<long long>(i));
             i--;
@@ -109,14 +112,17 @@ AstNode* FlatMultiplyNode::checkForNan(){
 }
 
 void FlatMultiplyNode::foldNegations(){
-    bool negate = false;
-
     for(unsigned long long i = 0; i < first.size(); i++){
         if(FlatAdditionNode* n = dynamic_cast<FlatAdditionNode*>(first[i])){
             if(n->first.size()==0 && n->second.size()==1){
                 negate = !negate;
                 first[i] = n->second[0];
                 delete n;
+            }
+        }else if(RationalLiteralNode* n = dynamic_cast<RationalLiteralNode*>(first[i])){
+            if(n->val.is_negative){
+                negate = !negate;
+                n->val.is_negative = false;
             }
         }
     }
@@ -130,8 +136,6 @@ void FlatMultiplyNode::foldNegations(){
             }
         }
     }
-
-    if(negate) addFirst(new RationalLiteralNode(-1)); //Kind of an annoying way to deal with negation
 }
 
 void FlatMultiplyNode::combineRationalTerms(){

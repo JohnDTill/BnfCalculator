@@ -124,7 +124,9 @@ private:
         if(match(MINUS)){
             AstNode* expr = leftUnary();
 
-            return new NegateNode(expr);
+            FlatAdditionNode* negate = new FlatAdditionNode;
+            negate->addSecond(expr);
+            return negate;
         }else{
             return rightUnary();
         }
@@ -135,11 +137,20 @@ private:
 
         while(peek(ASTRISK) || peek(BACKSLASH) || peek(FORWARDSLASH) || peek(PERCENT)){
             if(match(ASTRISK)){
-                expr = new MultiplyNode(expr, leftUnary());
+                FlatMultiplyNode* node = new FlatMultiplyNode;
+                node->addFirst(expr);
+                node->addFirst(leftUnary());
+                expr = node;
             }else if(match(BACKSLASH)){
-                expr = new DivideNode(expr, leftUnary());
+                FlatMultiplyNode* node = new FlatMultiplyNode;
+                node->addFirst(expr);
+                node->addSecond(leftUnary());
+                expr = node;
             }else if(match(FORWARDSLASH)){
-                expr = new DivideNode(leftUnary(), expr);
+                FlatMultiplyNode* node = new FlatMultiplyNode;
+                node->addSecond(expr);
+                node->addFirst(leftUnary());
+                expr = node;
             }else if(match(PERCENT)){
                 expr = new ModulusNode(expr, leftUnary());
             }
@@ -152,11 +163,16 @@ private:
         AstNode* expr = multiplication();
 
         while(peek(PLUS) || peek(MINUS)){
+            FlatAdditionNode* node = new FlatAdditionNode;
+            node->addFirst(expr);
+
             if(match(PLUS)){
-                expr = new AdditionNode(expr, multiplication());
+                node->addFirst(multiplication());
             }else if(match(MINUS)){
-                expr = new SubtractNode(expr, multiplication());
+                node->addSecond(multiplication());
             }
+
+            expr = node;
         }
 
         return expr;

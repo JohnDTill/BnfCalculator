@@ -21,9 +21,7 @@ AstNode* ModulusNode::simplify(){
     RationalLiteralNode* nr = dynamic_cast<RationalLiteralNode*>(rhs);
     if(nl && nr){
         RationalLiteralNode* mod = new RationalLiteralNode(nl->val % nr->val);
-        mod->val.simplify();
-        delete nl;
-        delete nr;
+        deleteChildren();
         return mod;
     }
 

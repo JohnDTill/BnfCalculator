@@ -1,6 +1,5 @@
 #include "piliteralnode.h"
 
-
 std::string PiLiteralNode::toString(){
     return "pi";
 }

@@ -2,7 +2,6 @@
 
 #include "absolutenode.h"
 #include "cosinenode.h"
-#include "negatenode.h"
 #include "rationalliteralnode.h"
 
 GroupingNode::GroupingNode(AstNode* child)

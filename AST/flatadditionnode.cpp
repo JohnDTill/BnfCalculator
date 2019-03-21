@@ -1,7 +1,7 @@
 #include "flatadditionnode.h"
 
+#include "flatmultiplynode.h"
 #include "nanliteralnode.h"
-#include "negatenode.h"
 #include "rationalliteralnode.h"
 
 std::string FlatAdditionNode::toString(){
@@ -32,7 +32,7 @@ double FlatAdditionNode::evaluate(){
     for(unsigned long long i = 0; i < first.size(); i++)
         val += first[i]->evaluate();
     for(unsigned long long i = 0; i < second.size(); i++)
-        val += second[i]->evaluate();
+        val -= second[i]->evaluate();
 
     return val;
 }
@@ -74,6 +74,13 @@ void FlatAdditionNode::associateChildAdditions(){
             second.erase(second.begin() + static_cast<long long>(i));
             i--;
             delete n;
+        }else if(FlatMultiplyNode* n = dynamic_cast<FlatMultiplyNode*>(second[i])){
+            if(n->negate){
+                n->negate = false;
+                second.erase(second.begin() + static_cast<long long>(i));
+                i--;
+                first.push_back(n);
+            }
         }
     }
 }

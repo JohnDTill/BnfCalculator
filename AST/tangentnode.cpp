@@ -1,7 +1,6 @@
 #include "tangentnode.h"
 
 #include "flatmultiplynode.h"
-#include "nanliteralnode.h"
 #include "piliteralnode.h"
 #include "rationalliteralnode.h"
 #include "../parser.h"
@@ -33,32 +32,15 @@ AstNode* TangentNode::simplify(){
 
             if(dynamic_cast<PiLiteralNode*>(n->first[0]))
             if(RationalLiteralNode* r = dynamic_cast<RationalLiteralNode*>(n->first[1])){
-                rational arg = r->val % 2;
-                if(r->val.is_negative) arg+=2;
-
-                //DO THIS - rely on sine and cosine implementations
-                std::unordered_map<std::string, std::string> exact_values = {
-                    {"0", "0"},
-                    {"1", "0"},
-                    {"1 / 4", "1"},
-                    {"3 / 4", "-1"},
-                    {"5 / 4", "1"},
-                    {"7 / 4", "-1"}
-                };
-
-                std::string val = arg.toString();
-                if(val=="1 / 2" || val=="3 / 2"){
-                    n->deleteChildren();
-                    delete n;
-
-                    return new NanLiteralNode();
-                }
-
-                auto result = exact_values.find(val);
-                if(result != exact_values.end()){
-                    n->deleteChildren();
-                    delete n;
-                    return Parser::parse(exact_values[val]);
+                rational coeff = n->negate ? -r->val : r->val;
+                std::string sine_lookup = SineNode::lookupPiCoeff(coeff);
+                if(sine_lookup.size() > 0){
+                    std::string cosine_lookup = SineNode::lookupPiCoeff(coeff + rational(1,2));
+                    FlatMultiplyNode* result = new FlatMultiplyNode;
+                    result->addFirst(Parser::parse(sine_lookup));
+                    result->addSecond(Parser::parse(cosine_lookup));
+                    deleteChildren();
+                    return result;
                 }
             }
         }
