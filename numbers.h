@@ -411,11 +411,11 @@ inline bool root(const big_uint& a, const big_uint& b, big_uint& val){
 }
 
 inline big_uint greatestCommonDivisor(const big_uint& a, const big_uint& b){
-    if(b.isZero())            return a;
-    else if(a.isZero())       return b;
-    else if(a==b)             return a;
-    else if(a > b)            return greatestCommonDivisor(a-b,b);
-    else                      return greatestCommonDivisor(a,b-a);
+    if(b.isZero() || a.isOne())       return a;
+    else if(a.isZero() || b.isOne())  return b;
+    else if(a==b)                     return a;
+    else if(a > b)                    return greatestCommonDivisor(a-b,b);
+    else                              return greatestCommonDivisor(a,b-a);
 }
 
 
